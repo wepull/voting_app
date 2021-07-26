@@ -35,7 +35,7 @@ spec:
     spec:
       containers:
       - name: voter
-        image: voter:latest
+        image: roost-utility:5002/voter:latest
         stdin: true
         tty: true
         env:
@@ -43,4 +43,3 @@ spec:
           value: roost-controlplane:30080
         ports:
         - containerPort: 3000
-        imagePullPolicy: Never
