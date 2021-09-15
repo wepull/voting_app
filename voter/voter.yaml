@@ -35,7 +35,7 @@ spec:
     spec:
       containers:
       - name: voter
-        image: local_registry:5002/voter:latest
+        image: local-registry:5002/voter:latest
         stdin: true
         tty: true
         env:

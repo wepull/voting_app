@@ -1,4 +1,4 @@
-apiVersion: v1
+-piVersion: v1
 kind: Service
 metadata: 
   labels: 
@@ -31,6 +31,6 @@ spec:
     spec:
       containers:
       - name: ballot
-        image: local_registry:5002/ballot:latest
+        image: local-registry:5002/ballot:latest
         ports:
         - containerPort: 8080
