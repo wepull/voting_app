@@ -31,6 +31,6 @@ spec:
     spec:
       containers:
       - name: ballot
-        image: roost-utility:5002/service-test-suite:latest
+        image: local_registry:5002/service-test-suite:latest
         ports:
         - containerPort: 5003
