@@ -28,7 +28,6 @@ func ReadAndParseInput(w http.ResponseWriter, r *http.Request, input interface{}
 
 		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 		w.WriteHeader(422) // unprocessable entity
-		fmt.Fprintf(w, TestStatusFailed)
 		return err2
 	}
 	return nil

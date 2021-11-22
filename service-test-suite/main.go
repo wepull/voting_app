@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/roost-io/roost-example/voting_app/service-test-suite/ballot"
 	"github.com/roost-io/roost-example/voting_app/service-test-suite/common"
@@ -12,38 +13,74 @@ import (
 func runTest(w http.ResponseWriter, r *http.Request) {
 
 	var req ballot.TestReq
+	var status string
 
-	var err error
-
-	if err = common.ReadAndParseInput(w, r, &req); err != nil {
+	if err := common.ReadAndParseInput(w, r, &req); err != nil {
+		r.Response.StatusCode = http.StatusBadRequest
 		return
 	}
 
-	url := req.IP + ":" + req.Port
+	status = common.TestStatusOK
 
-	defer func(err error, url string) {
-		if err != nil {
-			common.TestStatusMapLock.Lock()
-			common.TestStatusMap[url] = common.TestStatusFailed
-			common.TestStatusMapLock.Unlock()
-		}
+	defer func(status string) {
 		w.Header().Set("Access-Control-Allow-Origin", "*")
 		w.Header().Add("Content-Type", "application/json")
-		w.Write([]byte(common.TestStatusOK))
-	}(err, url)
+		w.Write([]byte(status))
+	}(status)
 
-	common.TestStatusMapLock.Lock()
-	common.TestStatusMap[url] = common.TestStatusInProgress
-	common.TestStatusMapLock.Unlock()
-	err = ballot.BallotRunTest(req)
-	if err != nil {
-		fmt.Printf("run test error:%+v", err)
-		return
+	if !req.Parallel {
+		url := req.IP + ":" + req.Port
+		common.TestStatusMapLock.RLock()
+		defer common.TestStatusMapLock.RUnlock()
+		if val, ok := common.TestStatusMap[url]; ok {
+			if val == common.TestStatusInProgress {
+				status = common.TestStatusNotInvoked
+				return
+			}
+		}
 	}
-	common.TestStatusMapLock.Lock()
-	common.TestStatusMap[url] = common.TestStatusPass
-	common.TestStatusMapLock.Unlock()
 
+	go func(req ballot.TestReq) {
+		var err error
+		url := req.IP + ":" + req.Port
+		if req.TimeOut == 0 {
+			req.TimeOut = common.DefaultTimeOut //default value
+		}
+
+		common.TestStatusMapLock.Lock()
+		common.TestStatusMap[url] = common.TestStatusInProgress
+		common.TestStatusMapLock.Unlock()
+		timer := time.NewTimer(time.Duration(req.TimeOut))
+		errch := make(chan error, 2)
+
+		go func(errch chan error) {
+			err := ballot.RunTest(req)
+			errch <- err
+			if err != nil {
+				fmt.Printf("run test error:%+v", err)
+				return
+			}
+		}(errch)
+
+		select {
+		case <-timer.C:
+			common.TestStatusMapLock.Lock()
+			common.TestStatusMap[url] = common.TestStatusTimeOut
+			common.TestStatusMapLock.Unlock()
+			timer.Stop()
+			return
+		case err = <-errch:
+			if err == nil {
+				common.TestStatusMapLock.Lock()
+				common.TestStatusMap[url] = common.TestStatusPass
+				common.TestStatusMapLock.Unlock()
+			} else {
+				common.TestStatusMapLock.Lock()
+				common.TestStatusMap[url] = common.TestStatusFailed
+				common.TestStatusMapLock.Unlock()
+			}
+		}
+	}(req)
 	fmt.Println("Endpoint Hit: runTest")
 }
 
@@ -52,6 +89,7 @@ func testResult(w http.ResponseWriter, r *http.Request) {
 	var req ballot.TestReq
 	var err error
 	if err = common.ReadAndParseInput(w, r, &req); err != nil {
+		r.Response.StatusCode = http.StatusBadRequest
 		return
 	}
 	url := req.IP + ":" + req.Port
@@ -63,9 +101,7 @@ func testResult(w http.ResponseWriter, r *http.Request) {
 		status = common.TestStatusPass
 	}
 	common.TestStatusMapLock.RUnlock()
-
-	ballot.BallotTestResult(req)
-
+	// ballot.BallotTestResult(req)
 	fmt.Fprintf(w, status)
 	fmt.Println("Endpoint Hit: testResult")
 }

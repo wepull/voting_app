@@ -9,13 +9,17 @@ import (
 	"net/http"
 )
 
-func BallotTestResult(req TestReq) string {
-	var status string
-	fmt.Println("Endpoint Hit:  ballot testResult")
-	return status
-}
+/*
+	func BallotTestResult(req TestReq) string {
+		var status string
+		fmt.Println("Endpoint Hit:  ballot testResult")
+		return status
+	}
+*/
 
-func BallotRunTest(req TestReq) error {
+//RunTest -- test func for ballot
+func RunTest(req TestReq) error {
+
 	url := req.IP + ":" + req.Port
 	_, result, err := httpClientRequest(http.MethodGet, url, "/", nil)
 	if err != nil {

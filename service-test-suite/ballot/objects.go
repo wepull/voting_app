@@ -4,6 +4,11 @@ type TestReq struct {
 	IP         string `json:"ip"`
 	Port       string `json:"port"`
 	KubeConfig string `json:"kubeconfig"`
+
+	Parallel   bool `json:"allow_multiple_invocations"`
+	TimeOut    int  `json:"timeout"` //in seconds
+	MaxRetries int  `json:"max_retries"`
+	LoopCount  int  `json:"loop_count"`
 	TestCriteria
 }
 
