@@ -9,13 +9,15 @@ const (
 	TestStatusPass       = "PASS"
 	TestStatusFailed     = "FAILED"
 	TestStatusInProgress = "IN-PROGRESS"
+	TestStatusNotFound   = "NOT-FOUND"
+	TestStatusTimeOut    = "TIMEOUT"
+
 	TestStatusOK         = "ok"
 	TestStatusNotInvoked = "NOT-INVOKED"
-	TestStatusTimeOut    = "TIMEOUT"
 	DefaultTimeOut       = 600
 )
 
 var (
-	TestStatusMap     map[string]string
+	TestStatusMap     = make(map[string]string)
 	TestStatusMapLock = &sync.RWMutex{}
 )

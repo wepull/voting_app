@@ -50,7 +50,7 @@ func runTest(w http.ResponseWriter, r *http.Request) {
 		common.TestStatusMapLock.Lock()
 		common.TestStatusMap[url] = common.TestStatusInProgress
 		common.TestStatusMapLock.Unlock()
-		timer := time.NewTimer(time.Duration(req.TimeOut))
+		timer := time.NewTimer(time.Duration(req.TimeOut) * time.Second)
 		errch := make(chan error, 2)
 
 		go func(errch chan error) {
@@ -67,6 +67,7 @@ func runTest(w http.ResponseWriter, r *http.Request) {
 			common.TestStatusMapLock.Lock()
 			common.TestStatusMap[url] = common.TestStatusTimeOut
 			common.TestStatusMapLock.Unlock()
+			log.Println("timeout") //debug
 			timer.Stop()
 			return
 		case err = <-errch:
@@ -74,11 +75,14 @@ func runTest(w http.ResponseWriter, r *http.Request) {
 				common.TestStatusMapLock.Lock()
 				common.TestStatusMap[url] = common.TestStatusPass
 				common.TestStatusMapLock.Unlock()
-			} else {
-				common.TestStatusMapLock.Lock()
-				common.TestStatusMap[url] = common.TestStatusFailed
-				common.TestStatusMapLock.Unlock()
+				log.Println("TestStatusPass") //debug
+				return
 			}
+			common.TestStatusMapLock.Lock()
+			common.TestStatusMap[url] = common.TestStatusFailed
+			common.TestStatusMapLock.Unlock()
+			log.Println("TestStatusFailed") //debug
+			return
 		}
 	}(req)
 	log.Println("Endpoint Hit: runTest")
@@ -98,7 +102,7 @@ func testResult(w http.ResponseWriter, r *http.Request) {
 	if val, ok := common.TestStatusMap[url]; ok {
 		status = val
 	} else {
-		status = common.TestStatusPass
+		status = common.TestStatusNotFound
 	}
 	common.TestStatusMapLock.RUnlock()
 	// ballot.BallotTestResult(req)
