@@ -57,7 +57,7 @@ func runTest(w http.ResponseWriter, r *http.Request) {
 			err := ballot.RunTest(req)
 			errch <- err
 			if err != nil {
-				fmt.Printf("run test error:%+v", err)
+				log.Printf("run test error:%+v", err)
 				return
 			}
 		}(errch)
@@ -81,7 +81,7 @@ func runTest(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 	}(req)
-	fmt.Println("Endpoint Hit: runTest")
+	log.Println("Endpoint Hit: runTest")
 }
 
 func testResult(w http.ResponseWriter, r *http.Request) {
@@ -103,7 +103,7 @@ func testResult(w http.ResponseWriter, r *http.Request) {
 	common.TestStatusMapLock.RUnlock()
 	// ballot.BallotTestResult(req)
 	fmt.Fprintf(w, status)
-	fmt.Println("Endpoint Hit: testResult")
+	log.Println("Endpoint Hit: testResult")
 }
 
 func handleRequests() {
