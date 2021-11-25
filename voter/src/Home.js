@@ -7,7 +7,10 @@ import docker from "./assets/docker.png";
 import kubernates from "./assets/kubernates.png";
 import "./App.css";
 
-const ballot_endpoint = process.env.REACT_APP_BALLOT_ENDPOINT || "roost-controlplane:30080"
+const ballot_endpoint =
+  process.env.REACT_APP_BALLOT_ENDPOINT ||
+  window.env.ballotEndpoint ||
+  "roost-controlplane:30080";
 const candidates = ["roost","docker","minikube","kind","k3d"]
 
 class Home extends Component {
