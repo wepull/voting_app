@@ -12,8 +12,8 @@ spec:
     type: "roost-example"
   ports:
   - name: voter
-    port: 3000
-    targetPort: 3000
+    port: 80
+    targetPort: 80
     nodePort: 30030
 
 ---
@@ -42,4 +42,4 @@ spec:
         - name: REACT_APP_BALLOT_ENDPOINT
           value: roost-controlplane:30080
         ports:
-        - containerPort: 3000
+        - containerPort: 80
