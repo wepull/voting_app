@@ -13,12 +13,14 @@ test: test-ballot test-voter
 
 .PHONY: test-ballot
 test-ballot:
+	echo "Test Ballot"
 	docker run --network="host" --rm -it -v ${PWD}/ballot/test:/scripts \
    zbio/artillery-custom \
    run -e unit /scripts/test.yaml
 
 .PHONY: test-voter
 test-voter:
+	echo "Test Voter"
 	mkdir -p /var/tmp/test
 	mkdir -p /var/tmp/test/cypress
 	mkdir -p /var/tmp/test/cypress/integration
@@ -54,7 +56,7 @@ deploy:
 
 .PHONY: clean
 clean:
-	kubectl delete -f service-test-suite/test-suite.yaml
-	kubectl delete -f voter/voter.yaml
-	kubectl delete -f ballot/ballot.yaml
-	kubectl delete -f ecserver/ecserver.yaml
+	-kubectl delete -f service-test-suite/test-suite.yaml
+	-kubectl delete -f voter/voter.yaml
+	-kubectl delete -f ballot/ballot.yaml
+	-kubectl delete -f ecserver/ecserver.yaml
