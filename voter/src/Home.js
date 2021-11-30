@@ -12,25 +12,42 @@ const ballot_endpoint =
 	process.env.REACT_APP_BALLOT_ENDPOINT ||
 	window.env.ballotEndpoint ||
 	'roost-controlplane:30080';
-const candidates = ['roost', 'docker', 'minikube', 'kind', 'k3d'];
+const ec_server_endpoint =
+	process.env.REACT_APP_EC_SERVER_ENDPOINT ||
+	window.env.ecServerEndpoint ||
+	'roost-controlplane:30081';
+// const candidates = ['roost', 'docker', 'minikube', 'kind', 'k3d'];
 
 class Home extends Component {
 	constructor(props) {
 		super(props);
 		// this.handleonCardClick = this.handleonCardClick.bind(this)
 		this.state = {
+			candidates: [],
 			candidate_id: '',
 			voter_id: '',
 			disabled: false,
 			view: 1,
 			showResultsButton: false,
-      showNotification: false
+			showNotification: false,
 		};
 	}
 
 	componentDidMount() {
 		let r = Math.random().toString(36).substring(7);
 		this.setState({ voter_id: r });
+		fetch(`http://${ec_server_endpoint}`, {
+			method: 'GET',
+		})
+			.then((response) => response.json())
+			.then((response) => {
+				this.setState({ candidates: response.Candidates });
+			})
+			.catch((error) => {
+				console.error(
+					'ballot service is not reachable at http://' + ec_server_endpoint
+				);
+			});
 	}
 
 	componentDidUpdate(prevProps, prevState) {
@@ -61,15 +78,16 @@ class Home extends Component {
 					});
 			}
 		}
-    if(prevState.showResultsButton !== this.state.showResultsButton){
-      this.setState({showNotification: true})
-      setTimeout(() =>{
-        this.setState({showNotification: false})
-      }, 3000)
-    }
+		if (prevState.showResultsButton !== this.state.showResultsButton) {
+			this.setState({ showNotification: true });
+			setTimeout(() => {
+				this.setState({ showNotification: false });
+			}, 3000);
+		}
 	}
 
 	render() {
+		// console.log(this.state.candidates);
 		const handleonCardClick = async (e) => {
 			if (this.state.disabled === false) {
 				let targetHtml = e.target.innerHTML;
@@ -95,8 +113,8 @@ class Home extends Component {
 						e.target.parentElement.parentElement.parentElement.children[1];
 				}
 				await this.setState({ candidate_id: targetElement.innerHTML });
-				candidates.forEach((candidate) => {
-					if (candidate === targetElement.innerHTML) {
+				this.state.candidates.forEach((candidate) => {
+					if (candidate.Name === targetElement.innerHTML) {
 						targetElement.parentElement.classList.add('selectedCard');
 						this.setState({ disabled: true });
 					}
@@ -112,7 +130,13 @@ class Home extends Component {
 					<div className="cardBackgroundContainer">
 						<div className="cardBackground"></div>
 						<div className="cardBackgroundImage">
-							{candidate === 'roost' ? (
+							<img
+								src={candidate.ImageUrl}
+								width="150px"
+								height="150px"
+								className="image"
+							/>
+							{/* {candidate === 'roost' ? (
 								<img
 									src={roost}
 									width="150px"
@@ -146,10 +170,10 @@ class Home extends Component {
 									height="150px"
 									className="image"
 								/>
-							) : null}
+							) : null} */}
 						</div>
 					</div>
-					<div className="cardContent">{candidate}</div>
+					<div className="cardContent">{candidate.Name}</div>
 				</div>
 			);
 		};
@@ -162,7 +186,7 @@ class Home extends Component {
 					How do you create a K8S cluster on your local system ?
 				</div>
 				<div className="cardContainer">
-					{candidates.map((candidate, index) => {
+					{this.state.candidates.map((candidate, index) => {
 						return CustomCard(candidate, index);
 					})}
 				</div>
@@ -171,10 +195,19 @@ class Home extends Component {
 						Show Results
 					</div>
 				)}
-        {this.state.showNotification && <div className="notificationPopup">
-          <div className="closeNotification" onClick={() => this.setState({showNotification: false})}>x</div>
-          <div className="notificationContent">Vote registered for {this.state.candidate_id}</div>
-        </div>}
+				{this.state.showNotification && (
+					<div className="notificationPopup">
+						<div
+							className="closeNotification"
+							onClick={() => this.setState({ showNotification: false })}
+						>
+							x
+						</div>
+						<div className="notificationContent">
+							Vote registered for {this.state.candidate_id}
+						</div>
+					</div>
+				)}
 			</div>
 		);
 	}
