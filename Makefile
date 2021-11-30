@@ -19,7 +19,12 @@ test-ballot:
 
 .PHONY: test-voter
 test-voter:
-	echo "testing voter"
+	mkdir -p /var/tmp/test
+	mkdir -p /var/tmp/test/cypress
+	mkdir -p /var/tmp/test/cypress/integration
+	echo '{"reporter": "junit","reporterOptions": {"mochaFile": "results/my-test-output-[hash].xml"}}' > /var/tmp/test/cypress.json
+	cp ${PWD}/service-test-suite/voter/voter.spec.js /var/tmp/test/cypress/integration
+	docker run --network="host"  -v /var/tmp/test:/e2e -w /e2e cypress/included:6.2.1 --browser firefox
 
 .PHONY: dockerise
 dockerise: build-voter build-ballot build-ecserver build-test
