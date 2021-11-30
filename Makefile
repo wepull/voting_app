@@ -5,9 +5,21 @@ TEST_IMG=service-test-suite
 IMAGE_TAG=latest
 
 # HOSTNAME := $(shell hostname)
-
 .PHONY: all
 all: dockerise deploy
+
+.PHONY: test
+test: test-ballot test-voter
+
+.PHONY: test-ballot
+test-ballot:
+	docker run --network="host" --rm -it -v ${PWD}/ballot/test:/scripts \
+   zbio/artillery-custom \
+   run -e unit /scripts/test.yaml
+
+.PHONY: test-voter
+test-voter:
+	echo "testing voter"
 
 .PHONY: dockerise
 dockerise: build-voter build-ballot build-ecserver build-test
