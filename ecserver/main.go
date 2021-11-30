@@ -31,7 +31,7 @@ type Candidate struct {
 }
 
 func writeBasicResponse(w http.ResponseWriter, resp *BasicResponse) {
-	w.Header().Add("Content-Type", "application/json")
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(resp.Status)
 	respJson, err := json.Marshal(resp)
 	if err != nil {
@@ -41,7 +41,7 @@ func writeBasicResponse(w http.ResponseWriter, resp *BasicResponse) {
 }
 
 func writeAllCandidatesResponse(w http.ResponseWriter) {
-	w.Header().Add("Content-Type", "application/json")
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	respJson, err := json.Marshal(&AllCandidatesResponse{
 		Candidates: candidates,
@@ -83,12 +83,18 @@ func handleInvalidMethod(w http.ResponseWriter, r *http.Request) {
 
 func serveRoot(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+	w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
+
 	switch r.Method {
 	case http.MethodGet:
 		getAllCandidates(w, r)
 
 	case http.MethodPost:
 		addCandidate(w, r)
+
+	case http.MethodOptions:
+		return
 
 	default:
 		handleInvalidMethod(w, r)
