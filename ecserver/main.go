@@ -11,7 +11,24 @@ const (
 )
 
 var (
-	candidates = []*Candidate{}
+	candidates = []*Candidate{
+		{
+			Name:     "Roost",
+			ImageUrl: "https://media-exp1.licdn.com/dms/image/C560BAQFYEoGBkAi1Kw/company-logo_200_200/0/1619739531504?e=2159024400&v=beta&t=wqTgly9SIvccX71S-VW1zQzuS5DtOnUzw6x9AMuxSRs",
+		},
+		{
+			Name:     "Docker",
+			ImageUrl: "https://pbs.twimg.com/profile_images/1273307847103635465/lfVWBmiW_400x400.png",
+		},
+		{
+			Name:     "MiniKube",
+			ImageUrl: "https://miro.medium.com/max/400/0*KzqL3xqmXzV5PPjX.png",
+		},
+		{
+			Name:     "K3D",
+			ImageUrl: "https://www.suse.com/c/wp-content/uploads/2021/02/K3D-Blog-Graphic-20210209.png",
+		},
+	}
 )
 
 // Basic payload to be sent in response to API request
