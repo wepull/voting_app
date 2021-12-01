@@ -41,5 +41,7 @@ spec:
         env:
         - name: REACT_APP_BALLOT_ENDPOINT
           value: roost-controlplane:30080
+        - name: REACT_APP_EC_SERVER_ENDPOINT
+          value: roost-controlplane:30081
         ports:
         - containerPort: 80
