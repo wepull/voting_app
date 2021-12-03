@@ -68,8 +68,54 @@ func addCandidate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	candidates = append(candidates, newCandidate)
+	isCandidatePresent := false
+	for i, ca := range candidates {
+		if newCandidate.Name == ca.Name {
+			isCandidatePresent = true
+			candidates[i].Name = newCandidate.Name
+			candidates[i].ImageUrl = newCandidate.ImageUrl
+		}
+	}
 
+	if !isCandidatePresent {
+		candidates = append(candidates, newCandidate)
+	}
+
+	writeAllCandidatesResponse(w)
+}
+
+func deleteCandidate(w http.ResponseWriter, r *http.Request) {
+	reqDeleteCandidate := &Candidate{}
+	err := json.NewDecoder(r.Body).Decode(reqDeleteCandidate)
+	if err != nil {
+		resp := &BasicResponse{
+			Status:  http.StatusBadRequest,
+			Message: "Invalid request payload",
+		}
+		writeBasicResponse(w, resp)
+		return
+	}
+
+	isCandidatePresent := false
+	updatedCandidates := []*Candidate{}
+	for i, ca := range candidates {
+		if reqDeleteCandidate.Name != ca.Name {
+			updatedCandidates = append(updatedCandidates, candidates[i])
+		} else {
+			isCandidatePresent = true
+		}
+	}
+	candidates = updatedCandidates
+
+	if !isCandidatePresent {
+		resp := &BasicResponse{
+			Status:  http.StatusBadRequest,
+			Message: "Candidate Not Found",
+		}
+		writeBasicResponse(w, resp)
+		return
+	}
+	
 	writeAllCandidatesResponse(w)
 }
 
@@ -92,6 +138,9 @@ func serveRoot(w http.ResponseWriter, r *http.Request) {
 
 	case http.MethodPost:
 		addCandidate(w, r)
+
+	case http.MethodDelete:
+		deleteCandidate(w, r)
 
 	case http.MethodOptions:
 		return
