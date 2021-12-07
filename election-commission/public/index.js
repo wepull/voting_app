@@ -49,6 +49,7 @@ function handleFormSubmit(ev) {
 		.then((res) => {
       getAllCandidates();
 			form.reset();
+			$('#customModal').modal('hide');
 			// alertContainer.innerHTML =
 			// 	'<div class="alert alert-success" role="alert">' +
 			// 	'Candidate added succesfully!' +
