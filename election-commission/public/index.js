@@ -48,6 +48,7 @@ function handleFormSubmit(ev) {
 		.then((res) => res.json())
 		.then((res) => {
       getAllCandidates();
+			form.reset();
 			// alertContainer.innerHTML =
 			// 	'<div class="alert alert-success" role="alert">' +
 			// 	'Candidate added succesfully!' +
