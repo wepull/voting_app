@@ -10,7 +10,7 @@ IMAGE_TAG=latest
 all: dockerise deploy
 
 .PHONY: test
-test: test-ballot test-voter
+test: test-ballot test-voter test-ecserver
 
 .PHONY: test-ballot
 test-ballot:
@@ -28,6 +28,13 @@ test-voter:
 	echo '{"reporter": "junit","reporterOptions": {"mochaFile": "results/my-test-output-[hash].xml"}}' > /var/tmp/test/cypress.json
 	cp ${PWD}/service-test-suite/voter/voter.spec.js /var/tmp/test/cypress/integration
 	docker run --network="host"  -v /var/tmp/test:/e2e -w /e2e cypress/included:6.2.1 --browser firefox
+
+.PHONY: test-ecserver
+test-ecserver:
+	echo "Test ECserver"
+	docker run --network="host" --rm -it -v ${PWD}/ecserver/test:/scripts \
+   zbio/artillery-custom \
+   run -e unit /scripts/test.yaml
 
 .PHONY: dockerise
 dockerise: build-voter build-ballot build-ecserver build-ec build-test
