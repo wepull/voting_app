@@ -2,6 +2,7 @@ VOTER_IMG=voter
 BALLOT_IMG=ballot
 ECSVR_IMG=ecserver
 TEST_IMG=service-test-suite
+EC_IMG=election-commission
 IMAGE_TAG=latest
 
 # HOSTNAME := $(shell hostname)
@@ -29,7 +30,7 @@ test-voter:
 	docker run --network="host"  -v /var/tmp/test:/e2e -w /e2e cypress/included:6.2.1 --browser firefox
 
 .PHONY: dockerise
-dockerise: build-voter build-ballot build-ecserver build-test
+dockerise: build-voter build-ballot build-ecserver build-ec build-test
 
 .PHONY: build-ballot
 build-ballot:
@@ -47,12 +48,18 @@ build-ecserver:
 build-test:
 	docker build -t ${TEST_IMG}:${IMAGE_TAG} -f service-test-suite/Dockerfile service-test-suite
 
+.PHONY: build-ec
+build-ec:
+	docker build -t ${EC_IMG}:${IMAGE_TAG} -f election-commission/Dockerfile election-commission
+		
 .PHONY: deploy
 deploy:
 	kubectl apply -f ecserver/ecserver.yaml
 	kubectl apply -f ballot/ballot.yaml
 	kubectl apply -f voter/voter.yaml
 	kubectl apply -f service-test-suite/test-suite.yaml
+	kubectl apply -f election-commission/ec.yaml
+
 
 .PHONY: clean
 clean:
@@ -60,3 +67,4 @@ clean:
 	-kubectl delete -f voter/voter.yaml
 	-kubectl delete -f ballot/ballot.yaml
 	-kubectl delete -f ecserver/ecserver.yaml
+	-kubectl delete -f election-commission/ec.yaml
