@@ -7,22 +7,22 @@ httpServicePort: &defaultServicePort 80
 
 services:
   voter: 
-    image: local-registry:5002/voter:latest
+    image: zbio/voter:latest
     ingressEndpoint: "/voter/"
     serviceName: "voter"
     servicePort: *defaultServicePort
   ballot: 
-    image: local-registry:5002/ballot:latest
+    image: zbio/ballot:latest
     ingressEndpoint: "/ballot/"
     serviceName: "ballot"
     servicePort: *defaultServicePort
   electionCommission: 
-    image: local-registry:5002/election-commission:latest
+    image: zbio/election-commission:latest
     ingressEndpoint: "/ec/"
     serviceName: "election-commission"
     servicePort: *defaultServicePort
   ecserver: 
-    image: local-registry:5002/ecserver:latest
+    image: zbio/ecserver:latest
     ingressEndpoint: "/ecserver/"
     serviceName: "ecserver"
     servicePort: *defaultServicePort
