@@ -58,7 +58,7 @@ build-test:
 .PHONY: build-ec
 build-ec:
 	docker build -t ${EC_IMG}:${IMAGE_TAG} -f election-commission/Dockerfile election-commission
-
+		
 .PHONY: push
 push:
 	docker tag ${BALLOT_IMG}:${IMAGE_TAG} zbio/${BALLOT_IMG}:${IMAGE_TAG}
