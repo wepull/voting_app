@@ -122,7 +122,7 @@ class Home extends Component {
 			}
 		};
 		const showResults = () => {
-			navigate(`/result`);
+			navigate(`/voter/result`);
 		};
 		const CustomCard = (candidate) => {
 			return (
