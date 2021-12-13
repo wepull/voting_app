@@ -1,0 +1,42 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+  name: vote
+  namespace: default
+spec:
+  ingressClassName: nginx 
+  rules:
+  - host: current-cluster.roost.io
+    http:
+      paths:
+      {{- with $.Values.services }}
+      - path: {{ .voter.ingressEndpoint }}
+        pathType: Prefix
+        backend:
+          service:
+            name: {{ .voter.serviceName }}
+            port:
+              number: {{ .voter.servicePort }}
+      - path: {{ .ballot.ingressEndpoint }}
+        pathType: Prefix
+        backend:
+          service:
+            name: {{ .ballot.serviceName}}
+            port:
+              number: {{ .ballot.servicePort }}
+      - path: {{ .ecserver.ingressEndpoint }}
+        pathType: Prefix
+        backend:
+          service:
+            name: {{ .ecserver.serviceName}}
+            port:
+              number: {{ .ecserver.servicePort }}
+      - path: {{ .electionCommission.ingressEndpoint }}
+        pathType: Prefix
+        backend:
+          service:
+            name: {{ .electionCommission.serviceName}}
+            port:
+              number: {{ .electionCommission.servicePort }}
+      {{- end }}
