@@ -10,7 +10,7 @@ spec:
     app: ecserver
   ports:
   - name: ecserver
-    port: 8081
+    port: 80
     targetPort: 8081
     nodePort: 30081
 

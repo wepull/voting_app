@@ -9,7 +9,7 @@ spec:
   type: NodePort
   selector: 
     app: voter
-    type: "roost-example"
+    type: roost-example
   ports:
   - name: http
     port: {{ .Values.httpServicePort}}
@@ -26,12 +26,12 @@ spec:
   selector:
     matchLabels:
       app: voter
-      type: "roost-example"
+      type: roost-example
   template:
     metadata:
       labels:
         app: voter
-        type: "roost-example"
+        type: roost-example
     spec:
       containers:
       - name: voter

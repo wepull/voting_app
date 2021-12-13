@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Service
 metadata: 
   labels: 
-    apps: ballot
+    app: ballot
   name: {{ .Values.services.ballot.serviceName }}
 spec: 
   type: NodePort

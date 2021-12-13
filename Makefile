@@ -66,6 +66,7 @@ deploy:
 	kubectl apply -f voter/voter.yaml
 	kubectl apply -f service-test-suite/test-suite.yaml
 	kubectl apply -f election-commission/ec.yaml
+	kubectl apply -f ingress.yaml
 
 
 .PHONY: clean
