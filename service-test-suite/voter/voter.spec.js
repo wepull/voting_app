@@ -15,7 +15,7 @@ describe('My First Test', () => {
   }
 ).as('postresult')
 
-cy.contains("docker").click()
+cy.contains("Docker").click()
 
 cy.wait('@postresult',{ responseTimeout: 35000 }).then((interception) => {
 
@@ -23,35 +23,28 @@ cy.wait('@postresult',{ responseTimeout: 35000 }).then((interception) => {
 })
 
 cy.reload()
-cy.contains("minikube").click()
+cy.contains("MiniKube").click()
 
 cy.wait('@postresult',{ responseTimeout: 35000 }).then((interception) => {
   assert.isNotNull(interception.response.body, '{code: 201, message: "Vote saved sucessfully"}')
 })
 cy.reload()
-cy.contains("roost").click()
+cy.contains("Roost").click()
 
 cy.wait('@postresult',{ responseTimeout: 35000 }).then((interception) => {
   assert.isNotNull(interception.response.body, '{code: 201, message: "Vote saved sucessfully"}')
 })
 cy.reload()
-cy.contains("kind").click()
-
-cy.wait('@postresult',{ responseTimeout: 35000 }).then((interception) => {
-  assert.isNotNull(interception.response.body, '{code: 201, message: "Vote saved sucessfully"}')
-})
-cy.reload()
-cy.contains("k3d").click()
+cy.contains("K3D").click()
 
 cy.wait('@postresult',{ responseTimeout: 35000 }).then((interception) => {
   assert.isNotNull(interception.response.body, '{code: 201, message: "Vote saved sucessfully"}')
 })
 
 cy.visit('http://10.10.0.10:30030/result')
-cy.contains('docker')
-cy.contains('docker')
-cy.contains('minikube')
-cy.contains('k3d')
-cy.contains('kind')
+cy.contains('Roost')
+cy.contains('Docker')
+cy.contains('MiniKube')
+cy.contains('K3D')
   })
 })
