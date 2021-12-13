@@ -40,7 +40,6 @@ spec:
         tty: true
         env:
         - name: EC_SERVER_ENDPOINT
-          # value: roost-controlplane{{- .Values.services.ecserver.ingressEndpoint }}
-          value: roost-controlplane:30081
+          value: {{ .Values.ingressHost }}{{ .Values.services.ecserver.ingressEndpoint }}
         ports:
         - containerPort: 80

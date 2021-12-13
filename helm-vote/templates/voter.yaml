@@ -40,8 +40,8 @@ spec:
         tty: true
         env:
         - name: REACT_APP_BALLOT_ENDPOINT
-          value: roost-controlplane{{- .Values.services.ballot.ingressEndpoint }}
+          value: {{ .Values.ingressHost }}{{ .Values.services.ballot.ingressEndpoint }}
         - name: REACT_APP_EC_SERVER_ENDPOINT
-          value: roost-controlplane{{- .Values.services.ecserver.ingressEndpoint }}
+          value: {{ .Values.ingressHost }}{{ .Values.services.ecserver.ingressEndpoint }}
         ports:
         - containerPort: 80

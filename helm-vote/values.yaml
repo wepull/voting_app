@@ -4,6 +4,7 @@
 
 
 httpServicePort: &defaultServicePort 80
+ingressHost: roost-controlplane
 
 services:
   voter: 
