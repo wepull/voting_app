@@ -3,94 +3,92 @@ var candidatesList = [];
 var cardsContainer = document.getElementById('cards-container');
 
 if (window['env']['ecServerEndpoint']) {
-	window.ecServerEndpoint = 'http://' + window['env']['ecServerEndpoint'];
-	form.addEventListener('submit', handleFormSubmit);
+  window.ecServerEndpoint = 'http://' + window['env']['ecServerEndpoint'];
+  form.addEventListener('submit', handleFormSubmit);
   getAllCandidates();
 } else {
-	form.innerHTML =
-		'<div class="alert alert-danger" role="alert">' +
-		"Couldn't find server's address. Please try again or report this to devs" +
-		'</div>';
+  form.innerHTML =
+    '<div class="alert alert-danger" role="alert">' +
+    "Couldn't find server's address. Please try again or report this to devs" +
+    '</div>';
 }
 
 function getAllCandidates() {
   fetch(window.ecServerEndpoint, {
-		method: 'GET',
-		headers: {
-			'Content-Type': 'application/json',
-		},
-	})
-		.then((res) => res.json())
-		.then((res) => {
-			candidatesList = res.Candidates;
-			showAllCandidates(candidatesList);
-		})
-		.catch((err) => {
-			cardsContainer.innerHTML =
-				'<div class="alert alert-danger" role="alert">' +
-				'Error in adding the candidate. Please try again or report this to devs' +
-				'</div>';
-		});
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
+    .then((res) => res.json())
+    .then((res) => {
+      candidatesList = res.Candidates;
+      showAllCandidates(candidatesList);
+    })
+    .catch((err) => {
+      cardsContainer.innerHTML =
+        '<div class="alert alert-danger" role="alert">' +
+        'Error in adding the candidate. Please try again or report this to devs' +
+        '</div>';
+    });
 }
 function handleFormSubmit(ev) {
-	ev.preventDefault();
-	var formData = new FormData(ev.target);
-	var Name = formData.get('name');
-	var ImageUrl = formData.get('imageUrl');
-	var alertContainer = document.getElementById('alertContainer');
-	fetch(window.ecServerEndpoint, {
-		method: 'POST',
-		headers: {
-			'Content-Type': 'application/json',
-		},
-		body: JSON.stringify({ Name, ImageUrl }),
-	})
-		.then((res) => res.json())
-		.then((res) => {
+  ev.preventDefault();
+  var formData = new FormData(ev.target);
+  var Name = formData.get('name');
+  var ImageUrl = formData.get('imageUrl');
+  var alertContainer = document.getElementById('alertContainer');
+  fetch(window.ecServerEndpoint, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ Name, ImageUrl }),
+  })
+    .then((res) => res.json())
+    .then((res) => {
       getAllCandidates();
-			form.reset();
-			$('#customModal').modal('hide');
-			// alertContainer.innerHTML =
-			// 	'<div class="alert alert-success" role="alert">' +
-			// 	'Candidate added succesfully!' +
-			// 	'</div>';
-		})
-		.catch((err) => {
-			alertContainer.innerHTML =
-				'<div class="alert alert-danger" role="alert">' +
-				'Error in adding the candidate. Please try again or report this to devs' +
-				'</div>';
-		});
+      form.reset();
+      $('#customModal').modal('hide');
+      // alertContainer.innerHTML =
+      // 	'<div class="alert alert-success" role="alert">' +
+      // 	'Candidate added succesfully!' +
+      // 	'</div>';
+    })
+    .catch((err) => {
+      alertContainer.innerHTML =
+        '<div class="alert alert-danger" role="alert">' +
+        'Error in adding the candidate. Please try again or report this to devs' +
+        '</div>';
+    });
 }
 
 function deleteCandidate(Name) {
-	fetch(window.ecServerEndpoint, {
-		method: 'DELETE',
-		headers: {
-			'Content-Type': 'application/json',
-		},
-		body: JSON.stringify({ Name }),
-	})
-		.then((res) => res.json())
-		.then((res) => {
-			candidatesList = res.Candidates;
-			showAllCandidates(candidatesList);
+  fetch(window.ecServerEndpoint, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ Name }),
+  })
+    .then((res) => res.json())
+    .then((res) => {
+      candidatesList = res.Candidates;
+      showAllCandidates(candidatesList);
       getAllCandidates();
-		})
-		.catch((err) => {
-			alertContainer.innerHTML =
-				'<div class="alert alert-danger" role="alert">' +
-				'Error in adding the candidate. Please try again or report this to devs' +
-				'</div>';
-		});
+    })
+    .catch((err) => {
+      alertContainer.innerHTML =
+        '<div class="alert alert-danger" role="alert">' +
+        'Error in adding the candidate. Please try again or report this to devs' +
+        '</div>';
+    });
 }
 
 function showAllCandidates(candidatesList) {
-  if(!candidatesList || candidatesList.length === 0){
-    cardsContainer.innerHTML =
-		`<h1>No Candidates</h1>`
-  }else{
-
+  if (!candidatesList || candidatesList.length === 0) {
+    cardsContainer.innerHTML = `<h1>No Candidates</h1>`;
+  } else {
     var candidatesCardsContainer = '';
     candidatesList.map((candidate) => {
       candidatesCardsContainer += `<div class="card-container">
