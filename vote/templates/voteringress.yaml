@@ -1,0 +1,34 @@
+# apiVersion: networking.k8s.io/v1
+# kind: Ingress
+# metadata:
+#   annotations:
+#     # nginx.ingress.kubernetes.io/rewrite-target: /$2
+#     # nginx.ingress.kubernetes.io/use-port-in-redirects: "true"
+# 
+#     # nginx.ingress.kubernetes.io/add-base-url: "true"
+#     # nginx.ingress.kubernetes.io/rewrite-target: /
+#     # nginx.ingress.kubernetes.io/port_in_redirect: "off"
+#     # nginx.ingress.kubernetes.io/use-regex: "true"
+#     # ingress.kubernetes.io/ssl-redirect: "true"
+#     # nginx.ingress.kubernetes.io/ssl-redirect: "true"
+#     # nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+#   name: voteringress
+#   # namespace: default
+# spec:
+#   ingressClassName: nginx 
+#   # defaultBackend:
+#   #   service:
+#   #     name: {{ .Values.services.voter.serviceName }}
+#   #     port:
+#   #       number: {{ .Values.services.voter.servicePort }}
+#   rules:
+#   - host: roost-controlplane
+#     http:
+#       paths:
+#       - path: /voter
+#         pathType: Prefix
+#         backend:
+#           service:
+#             name: voter
+#             port:
+#               number: 80
