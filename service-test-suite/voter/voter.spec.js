@@ -6,12 +6,12 @@
 // https://on.cypress.io/writing-first-test
 describe('My First Test', () => {
   it('Visits voter webpage', () => {
-    cy.visit('http://10.10.0.10:30030')
+    cy.visit('http://roost-controlplane:30030')
 
   cy.intercept(
   {
     method: 'POST', // Route all POST requests
-    url: '*30080*', // that have a URL that matches '/users/*'
+    url: '*ballot*', // that have a URL that matches '/users/*'
   }
 ).as('postresult')
 
@@ -41,7 +41,7 @@ cy.wait('@postresult',{ responseTimeout: 35000 }).then((interception) => {
   assert.isNotNull(interception.response.body, '{code: 201, message: "Vote saved sucessfully"}')
 })
 
-cy.visit('http://10.10.0.10:30030/result')
+cy.visit('http://roost-controlplane:30030/voter/result')
 cy.contains('Roost')
 cy.contains('Docker')
 cy.contains('MiniKube')
