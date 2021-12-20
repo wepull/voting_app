@@ -1,9 +1,6 @@
 // <reference types="cypress" />
 
 context('Tesing Election Commission UI', () => {
-  beforeEach(()=>{
-    cy.visit('http://roost-controlplane:30031')
-  })
 
   it('Testing valid text in web-age',()=>{
     cy.visit('http://roost-controlplane:30031')
@@ -24,10 +21,9 @@ context('Tesing Election Commission UI', () => {
     //cy.contains("Candidate added succesfully!")
   })
 })
-
-context('Testing voter UI',() => {
-  it('Testing voter UI',()=>{
-    cy.visit('http://roost-controlplane:30030')
-    cy.contains('RoostK8s').click()
-  })
-})
+// context('Testing voter UI',() => {
+//   it('Testing voter UI',()=>{
+//     cy.visit('http://roost-controlplane:30030')
+//     cy.contains('RoostK8s').click()
+//   })
+// })
