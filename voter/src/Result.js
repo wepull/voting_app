@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import roost from './assets/roost.png';
-import k3d from './assets/k3d.svg';
-import kind from './assets/kind.png';
-import minikube from './assets/minikube.png';
-import docker from './assets/docker.png';
+// import roost from './assets/roost.png';
+// import k3d from './assets/k3d.svg';
+// import kind from './assets/kind.png';
+// import minikube from './assets/minikube.png';
+// import docker from './assets/docker.png';
 import kubernates from './assets/kubernates.png';
 import './App.css';
 
@@ -38,7 +38,7 @@ class Result extends Component {
 				throw new Error('ballot service unavailable');
 			})
 			.then((response) => {
-				console.log('In resposnse: ', response);
+				// console.log('In resposnse: ', response);
 				date = new Date();
 				this.setState({ results: response.results });
 				this.setState({ total_votes: response.total_votes });
@@ -63,21 +63,24 @@ class Result extends Component {
 	}
 
 	render() {
-		const CustomCard = (candidate) => {
+		const CustomCard = (candidate, index) => {
 			return (
-				<div className="card">
+				<div className="card" key={index}>
 					<div className="cardBackgroundContainer">
 						<div className="cardBackground"></div>
 						<div className="cardBackgroundImage">
-							{this.state.candidates.map((c) => {
+							{this.state.candidates.map((c,i) => {
 								if (c.Name === candidate.candidate_id) {
 									return <img
 										src={c.ImageUrl}
 										width="150px"
 										height="150px"
 										className="image"
+										alt={c.Name}
+										key={i}
 									/>;
 								}
+								return <div key={i}></div>
 							})}
 							{/* {candidate.candidate_id === 'roost' ? (
 								<img
@@ -118,9 +121,9 @@ class Result extends Component {
 					</div>
 					<div className="cardContent">
 						{candidate.candidate_id}
-						<div class="progressbar_back">
+						<div className="progressbar_back">
 							<div
-								class="progressbar_front"
+								className="progressbar_front"
 								style={{
 									width: `${Math.round(
 										(candidate.vote_count / this.state.total_votes) * 100
@@ -148,7 +151,7 @@ class Result extends Component {
 		return (
 			<div className="Home">
 				<div className="logo">
-					<img src={kubernates} width="70px" height="70px" />
+					<img src={kubernates} width="70px" height="70px" alt={"logo"}/>
 				</div>
 				<div className="heading">
 					Developers prefer for building K8S cluster, as of{' '}

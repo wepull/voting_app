@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
-import roost from './assets/roost.png';
-import k3d from './assets/k3d.svg';
-import kind from './assets/kind.png';
-import minikube from './assets/minikube.png';
-import docker from './assets/docker.png';
+// import roost from './assets/roost.png';
+// import k3d from './assets/k3d.svg';
+// import kind from './assets/kind.png';
+// import minikube from './assets/minikube.png';
+// import docker from './assets/docker.png';
 import kubernates from './assets/kubernates.png';
 import './App.css';
 
@@ -56,9 +56,9 @@ class Home extends Component {
         candidate_id: this.state.candidate_id,
         vote: this.state.voter_id,
       };
-      console.log('state: ', this.state);
-      console.log('data for POST: ', data);
-      console.log('ballot endpoint is: ', ballot_endpoint);
+      // console.log('state: ', this.state);
+      // console.log('data for POST: ', data);
+      // console.log('ballot endpoint is: ', ballot_endpoint);
       if (ballot_endpoint === '') {
         console.error('ballot endpoint is not set');
       } else {
@@ -69,7 +69,7 @@ class Home extends Component {
           .then((response) => response.json())
           .then((response) => {
             this.setState({ showResultsButton: true });
-            console.log(response);
+            // console.log(response);
           })
           .catch((error) => {
             console.error(
@@ -80,53 +80,58 @@ class Home extends Component {
     }
     if (prevState.showResultsButton !== this.state.showResultsButton) {
       this.setState({ showNotification: true });
-      setTimeout(() => {
+      this.timer = setTimeout(() => {
         this.setState({ showNotification: false });
       }, 3000);
     }
   }
+	componentWillUnmount() {
+    clearTimeout(this.timer);
+  }
 
   render() {
     // console.log(this.state.candidates);
-    const handleonCardClick = async (e) => {
+    const handleonCardClick = async (candidate) => {
       if (this.state.disabled === false) {
-        let targetHtml = e.target.innerHTML;
-        let targetElement = e.target;
-        if (e.target.className === 'cardBackgroundContainer') {
-          targetHtml = e.target.parentElement.children[1].innerHTML;
-          targetElement = e.target.parentElement.children[1];
-        } else if (
-          e.target.className === 'cardBackground' ||
-          e.target.className === 'cardBackgroundImage'
-        ) {
-          targetHtml =
-            e.target.parentElement.parentElement.children[1].innerHTML;
-          targetElement = e.target.parentElement.parentElement.children[1];
-        } else if (e.target.className === 'card') {
-          targetHtml = e.target.children[1].innerHTML;
-          targetElement = e.target.children[1];
-        } else if (e.target.className === 'image') {
-          targetHtml =
-            e.target.parentElement.parentElement.parentElement.children[1]
-              .innerHTML;
-          targetElement =
-            e.target.parentElement.parentElement.parentElement.children[1];
-        }
-        await this.setState({ candidate_id: targetElement.innerHTML });
-        this.state.candidates.forEach((candidate) => {
-          if (candidate.Name === targetElement.innerHTML) {
-            targetElement.parentElement.classList.add('selectedCard');
-            this.setState({ disabled: true });
-          }
-        });
+				this.setState({ candidate_id: candidate.Name });
+				this.setState({ disabled: true });
+        // let targetHtml = e.target.innerHTML;
+        // let targetElement = e.target;
+        // if (e.target.className === 'cardBackgroundContainer') {
+        //   targetHtml = e.target.parentElement.children[1].innerHTML;
+        //   targetElement = e.target.parentElement.children[1];
+        // } else if (
+        //   e.target.className === 'cardBackground' ||
+        //   e.target.className === 'cardBackgroundImage'
+        // ) {
+        //   targetHtml =
+        //     e.target.parentElement.parentElement.children[1].innerHTML;
+        //   targetElement = e.target.parentElement.parentElement.children[1];
+        // } else if (e.target.className === 'card') {
+        //   targetHtml = e.target.children[1].innerHTML;
+        //   targetElement = e.target.children[1];
+        // } else if (e.target.className === 'image') {
+        //   targetHtml =
+        //     e.target.parentElement.parentElement.parentElement.children[1]
+        //       .innerHTML;
+        //   targetElement =
+        //     e.target.parentElement.parentElement.parentElement.children[1];
+        // }
+        // await this.setState({ candidate_id: targetElement.innerHTML });
+        // this.state.candidates.forEach((candidate) => {
+        //   if (candidate.Name === targetElement.innerHTML) {
+        //     targetElement.parentElement.classList.add('selectedCard');
+        //     this.setState({ disabled: true });
+        //   }
+        // });
       }
     };
     const showResults = () => {
       this.props.history.push('/result');
     };
-    const CustomCard = (candidate) => {
+    const CustomCard = (candidate, index) => {
       return (
-        <div className="card" onClick={(e) => handleonCardClick(e)}>
+        <div className={this.state.candidate_id === candidate.Name ? "card selectedCard": "card"} onClick={() => handleonCardClick(candidate)} key={index}>
           <div className="cardBackgroundContainer">
             <div className="cardBackground"></div>
             <div className="cardBackgroundImage">
@@ -135,6 +140,7 @@ class Home extends Component {
                 width="150px"
                 height="150px"
                 className="image"
+								alt={candidate.Name}
               />
               {/* {candidate === 'roost' ? (
 								<img
@@ -180,7 +186,7 @@ class Home extends Component {
     return (
       <div className="Home">
         <div className="logo">
-          <img src={kubernates} width="70px" height="70px" />
+          <img src={kubernates} width="70px" height="70px" alt={"logo"}/>
         </div>
         <div className="heading">
           How do you create a K8S cluster on your local system ?

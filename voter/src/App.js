@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import Home from "./Home";
 import Result from "./Result";
 import {
@@ -9,7 +9,7 @@ import {
 } from "react-router-dom";
 import "./App.css";
 
-const ballot_endpoint = "roost-controlplane:30080";
+// const ballot_endpoint = "roost-controlplane:30080";
 
 function App() {
   return (
