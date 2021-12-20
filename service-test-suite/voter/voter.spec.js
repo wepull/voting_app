@@ -6,7 +6,7 @@
 // https://on.cypress.io/writing-first-test
 describe('My First Test', () => {
   it('Visits voter webpage', () => {
-    cy.visit('http://roost-controlplane:30030')
+    cy.visit('http://roost-controlplane:30030/voter')
 
   cy.intercept(
   {

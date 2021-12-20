@@ -3,7 +3,7 @@
 context('Tesing Election Commission UI', () => {
 
   it('Testing valid text in web-age',()=>{
-    cy.visit('http://roost-controlplane:30031')
+    cy.visit('http://roost-controlplane:30031/ec')
     cy.contains('Election Commission Admin Portal')
     cy.contains("Add Candidate").click()
     cy.contains('Add your candidates for election of K8s distribution here')
@@ -12,7 +12,7 @@ context('Tesing Election Commission UI', () => {
   })
 
   it('Testing the functionalities inside the web-page',()=>{
-    cy.visit('http://roost-controlplane:30031')
+    cy.visit('http://roost-controlplane:30031/ec')
     cy.contains("Add Candidate").click()
     cy.get("#candidateNameInput").type("RoostK8s")
     cy.get("#candidateImageUrlInput").type("https://content.roost.io/content/images/2021/05/Roost-3D-Metallic---Horizontal---Light-Silver.png")
