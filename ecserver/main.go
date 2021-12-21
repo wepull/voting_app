@@ -14,11 +14,11 @@ var (
 	candidates = []*Candidate{
 		{
 			Name:     "Roost",
-			ImageUrl: "https://media-exp1.licdn.com/dms/image/C560BAQFYEoGBkAi1Kw/company-logo_200_200/0/1619739531504?e=2159024400&v=beta&t=wqTgly9SIvccX71S-VW1zQzuS5DtOnUzw6x9AMuxSRs",
+			ImageUrl: "https://roost.ai/hubfs/Roost-V3.svg",
 		},
 		{
 			Name:     "Docker",
-			ImageUrl: "https://pbs.twimg.com/profile_images/1273307847103635465/lfVWBmiW_400x400.png",
+			ImageUrl: "https://logos-world.net/wp-content/uploads/2021/02/Docker-Logo.png",
 		},
 		{
 			Name:     "MiniKube",
