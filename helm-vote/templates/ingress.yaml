@@ -3,7 +3,7 @@ kind: Ingress
 metadata:
   annotations:
   name: vote
-  namespace: default
+  # namespace: default
 spec:
   ingressClassName: nginx 
   rules:
