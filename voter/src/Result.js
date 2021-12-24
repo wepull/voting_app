@@ -154,7 +154,7 @@ class Result extends Component {
 					<img src={kubernates} width="70px" height="70px" alt={"logo"}/>
 				</div>
 				<div className="heading">
-					Developers prefer for building K8S cluster, as of{' '}
+					Developers preference for building K8S cluster, as of{' '}
 					{date.toLocaleString()}
 				</div>
 				<div className="cardContainer">
