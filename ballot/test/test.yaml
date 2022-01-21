@@ -5,7 +5,7 @@ config:
     timeout: 10
   environments:
     production:
-      target: "http://18.217.74.195:30080"
+      target: "http://roost-controlplane:30080"
       phases:
         - duration: 15
           arrivalRate: 5
