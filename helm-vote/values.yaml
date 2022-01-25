@@ -4,7 +4,7 @@
 
 
 httpServicePort: &defaultServicePort 80
-ingressHost: roost-controlplane
+ingressHost: current-cluster-roost.io
 
 services:
   voter: 
