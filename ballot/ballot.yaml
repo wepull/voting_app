@@ -5,14 +5,12 @@ metadata:
     apps: ballot
   name: ballot
 spec: 
-  type: NodePort
   selector: 
     app: ballot
   ports:
   - name: ballot
     port: 80
     targetPort: 8080
-    nodePort: 30080
 
 ---
 apiVersion: apps/v1

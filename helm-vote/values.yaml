@@ -5,25 +5,31 @@
 
 httpServicePort: &defaultServicePort 80
 ingressHost: current-cluster-roost.io
+tag: &defaultTag latest
+namespace: default
 
 services:
   voter: 
-    image: zbio/voter:latest
-    ingressEndpoint: "/voter/"
+    imageName: local-registry:5002/voter
+    imageTag: *defaultTag
     serviceName: "voter"
     servicePort: *defaultServicePort
+    host: voter.10.10.0.10.nip.io # host would be prefixed with namespace. (e.g. default.voter.)
   ballot: 
-    image: zbio/ballot:latest
-    ingressEndpoint: "/ballot/"
+    imageName: local-registry:5002/ballot 
+    imageTag: *defaultTag
     serviceName: "ballot"
     servicePort: *defaultServicePort
+    host: ballot.10.10.0.10.nip.io # host would be prefixed with namespace. (e.g. default.ballot.)
   electionCommission: 
-    image: zbio/election-commission:latest
-    ingressEndpoint: "/ec/"
+    imageName: local-registry:5002/election-commission
+    imageTag: *defaultTag
     serviceName: "election-commission"
     servicePort: *defaultServicePort
+    host: ec.10.10.0.10.nip.io # host would be prefixed with namespace. (e.g. default.ec.)
   ecserver: 
-    image: zbio/ecserver:latest
-    ingressEndpoint: "/ecserver/"
+    imageName: local-registry:5002/ecserver
+    imageTag: *defaultTag
     serviceName: "ecserver"
     servicePort: *defaultServicePort
+    host: ecserver.10.10.0.10.nip.io # host would be prefixed with namespace. (e.g. default.ecserver.)

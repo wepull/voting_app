@@ -4,21 +4,21 @@ metadata:
   labels: 
     app: ecserver
   name: {{ .Values.services.ecserver.serviceName }}
+  namespace: {{ .Values.namespace }}
 spec: 
-  type: NodePort
   selector: 
     app: ecserver
   ports:
   - name: http
     port: {{ .Values.httpServicePort }}
     targetPort: 8081
-    nodePort: 30081
 
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: ecserver
+  namespace: {{ .Values.namespace }}
 spec:
   replicas: 1
   selector:
@@ -31,6 +31,6 @@ spec:
     spec:
       containers:
       - name: ecserver
-        image: {{ .Values.services.ecserver.image }}
+        image: '{{- printf "%s:%s" .Values.services.ecserver.imageName .Values.services.ecserver.imageTag -}}'
         ports:
         - containerPort: 8081

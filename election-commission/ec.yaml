@@ -6,7 +6,6 @@ metadata:
     type: "roost-example"
   name: election-commission
 spec: 
-  type: NodePort
   selector: 
     app: election-commission
     type: "roost-example"
@@ -14,7 +13,6 @@ spec:
   - name: election-commission
     port: 80
     targetPort: 80
-    nodePort: 30031
 
 ---
 apiVersion: apps/v1
@@ -40,6 +38,6 @@ spec:
         tty: true
         env:
         - name: EC_SERVER_ENDPOINT
-          value: roost-controlplane:30081
+          value: ecserver.10.10.0.10.nip.io
         ports:
         - containerPort: 80

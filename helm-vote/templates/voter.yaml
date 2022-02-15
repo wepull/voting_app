@@ -5,8 +5,8 @@ metadata:
     apps: voter
     type: "roost-example"
   name: {{ .Values.services.voter.serviceName }}
+  namespace: {{ .Values.namespace }}
 spec:
-  type: NodePort
   selector: 
     app: voter
     type: roost-example
@@ -14,13 +14,13 @@ spec:
   - name: http
     port: {{ .Values.httpServicePort}}
     targetPort: 80
-    nodePort: 30030
 
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: voter
+  namespace: {{ .Values.namespace }}
 spec:
   replicas: 1
   selector:
@@ -35,13 +35,13 @@ spec:
     spec:
       containers:
       - name: voter
-        image: {{ .Values.services.voter.image }}
+        image: "{{ .Values.services.voter.imageName }}:{{ .Values.services.voter.imageTag}}"
         stdin: true
         tty: true
         env:
         - name: REACT_APP_BALLOT_ENDPOINT
-          value: {{ .Values.ingressHost }}{{ .Values.services.ballot.ingressEndpoint }}
+          value: "{{ .Values.namespace }}.{{ .Values.services.ballot.host }}"
         - name: REACT_APP_EC_SERVER_ENDPOINT
-          value: {{ .Values.ingressHost }}{{ .Values.services.ecserver.ingressEndpoint }}
+          value: "{{ .Values.namespace }}.{{ .Values.services.ecserver.host }}"
         ports:
         - containerPort: 80

@@ -2,41 +2,81 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   annotations:
-  name: vote
-  # namespace: default
+  name: voting-app
+  namespace: {{ .Values.namespace }}
 spec:
   ingressClassName: nginx 
   rules:
-  - host: {{ .Values.ingressHost }}
+  - host: "{{ .Values.namespace }}.{{ .Values.services.voter.host}}"
     http:
       paths:
-      {{- with $.Values.services }}
-      - path: {{ .voter.ingressEndpoint }}
+      - path: /
         pathType: Prefix
         backend:
           service:
-            name: {{ .voter.serviceName }}
+            name: voter
             port:
-              number: {{ .voter.servicePort }}
-      - path: {{ .ballot.ingressEndpoint }}
+              number: 80
+  - host: "{{ .Values.namespace }}.{{ .Values.services.ballot.host}}"
+    http:
+      paths:
+      - path: /
         pathType: Prefix
         backend:
           service:
-            name: {{ .ballot.serviceName}}
+            name: ballot
             port:
-              number: {{ .ballot.servicePort }}
-      - path: {{ .ecserver.ingressEndpoint }}
+              number: 80
+  - host: "{{ .Values.namespace }}.{{ .Values.services.ecserver.host}}"
+    http:
+      paths:
+      - path: /
         pathType: Prefix
         backend:
           service:
-            name: {{ .ecserver.serviceName}}
+            name: ecserver
             port:
-              number: {{ .ecserver.servicePort }}
-      - path: {{ .electionCommission.ingressEndpoint }}
+              number: 80
+  - host: "{{ .Values.namespace }}.{{ .Values.services.electionCommission.host}}"
+    http:
+      paths:
+      - path: /
         pathType: Prefix
         backend:
           service:
-            name: {{ .electionCommission.serviceName}}
+            name: election-commission
             port:
-              number: {{ .electionCommission.servicePort }}
-      {{- end }}
+              number: 80
+  # - host: {{ .Values.ingressHost }}
+  #   http:
+  #     paths:
+  #     {{- with $.Values.services }}
+  #     - path: "/{{ $.Values.namespace }}({{ .voter.ingressEndpoint }})(.*)"
+  #       pathType: Prefix
+  #       backend:
+  #         service:
+  #           name: {{ .voter.serviceName }}
+  #           port:
+  #             number: {{ .voter.servicePort }}
+  #     - path: "/{{ $.Values.namespace }}({{ .ballot.ingressEndpoint }})(.*)"
+  #       pathType: Prefix
+  #       backend:
+  #         service:
+  #           name: {{ .ballot.serviceName}}
+  #           port:
+  #             number: {{ .ballot.servicePort }}
+  #     - path: "/{{ $.Values.namespace}}({{ .ecserver.ingressEndpoint }})(.*)"
+  #       pathType: Prefix
+  #       backend:
+  #         service:
+  #           name: {{ .ecserver.serviceName}}
+  #           port:
+  #             number: {{ .ecserver.servicePort }}
+  #     - path: "/{{ $.Values.namespace }}({{ .electionCommission.ingressEndpoint }})(.*)"
+  #       pathType: Prefix
+  #       backend:
+  #         service:
+  #           name: {{ .electionCommission.serviceName}}
+  #           port:
+  #             number: {{ .electionCommission.servicePort }}
+  #     {{- end }}
