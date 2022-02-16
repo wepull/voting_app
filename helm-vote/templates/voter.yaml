@@ -35,13 +35,13 @@ spec:
     spec:
       containers:
       - name: voter
-        image: "{{ .Values.services.voter.imageName }}:{{ .Values.services.voter.imageTag}}"
+        image: '{{- printf "%s/%s:%s" .Values.registry .Values.services.voter.imageName .Values.services.voter.imageTag -}}'
         stdin: true
         tty: true
         env:
         - name: REACT_APP_BALLOT_ENDPOINT
-          value: "{{ .Values.namespace }}.{{ .Values.services.ballot.host }}"
+          value: "{{ .Values.namespace }}.{{ .Values.services.ballot.serviceName }}.{{ .Values.clusterIP }}.{{ .Values.clusterDomain }}"
         - name: REACT_APP_EC_SERVER_ENDPOINT
-          value: "{{ .Values.namespace }}.{{ .Values.services.ecserver.host }}"
+          value: "{{ .Values.namespace }}.{{ .Values.services.ecserver.serviceName }}.{{ .Values.clusterIP }}.{{ .Values.clusterDomain }}"
         ports:
         - containerPort: 80

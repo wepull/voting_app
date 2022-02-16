@@ -4,32 +4,30 @@
 
 
 httpServicePort: &defaultServicePort 80
-ingressHost: current-cluster-roost.io
 tag: &defaultTag latest
 namespace: default
+clusterIP: 10.10.0.10
+clusterDomain: nip.io
+registry: &defaultRegistry local-registry:5002
 
 services:
   voter: 
-    imageName: local-registry:5002/voter
+    imageName: voter # without registry-host and tag
     imageTag: *defaultTag
-    serviceName: "voter"
+    serviceName: voter
     servicePort: *defaultServicePort
-    host: voter.10.10.0.10.nip.io # host would be prefixed with namespace. (e.g. default.voter.)
   ballot: 
-    imageName: local-registry:5002/ballot 
+    imageName: ballot # without registry-host and tag
     imageTag: *defaultTag
     serviceName: "ballot"
     servicePort: *defaultServicePort
-    host: ballot.10.10.0.10.nip.io # host would be prefixed with namespace. (e.g. default.ballot.)
   electionCommission: 
-    imageName: local-registry:5002/election-commission
+    imageName: election-commission # without registry-host and tag
     imageTag: *defaultTag
-    serviceName: "election-commission"
+    serviceName: "ec"
     servicePort: *defaultServicePort
-    host: ec.10.10.0.10.nip.io # host would be prefixed with namespace. (e.g. default.ec.)
   ecserver: 
-    imageName: local-registry:5002/ecserver
+    imageName: ecserver # without registry-host and tag
     imageTag: *defaultTag
     serviceName: "ecserver"
     servicePort: *defaultServicePort
-    host: ecserver.10.10.0.10.nip.io # host would be prefixed with namespace. (e.g. default.ecserver.)

@@ -31,6 +31,6 @@ spec:
     spec:
       containers:
       - name: ballot
-        image: '{{- printf "%s:%s" .Values.services.ballot.imageName .Values.services.ballot.imageTag -}}'
+        image: '{{- printf "%s/%s:%s" .Values.registry .Values.services.ballot.imageName .Values.services.ballot.imageTag -}}'
         ports:
         - containerPort: 8080

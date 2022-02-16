@@ -35,11 +35,11 @@ spec:
     spec:
       containers:
       - name: election-commission
-        image: '{{- printf "%s:%s"  .Values.services.electionCommission.imageName .Values.services.electionCommission.imageTag -}}'
+        image: '{{- printf "%s/%s:%s" .Values.registry .Values.services.electionCommission.imageName .Values.services.electionCommission.imageTag -}}'
         stdin: true
         tty: true
         env:
         - name: EC_SERVER_ENDPOINT
-          value: "{{ .Values.namespace}}.{{ .Values.services.ecserver.host }}"
+          value: "{{ .Values.namespace}}.{{ .Values.services.ecserver.serviceName }}.{{ .Values.clusterIP }}.{{ .Values.clusterDomain }}"
         ports:
         - containerPort: 80
