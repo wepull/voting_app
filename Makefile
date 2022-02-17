@@ -70,7 +70,7 @@ build-test:
 ifdef DOCKER_HOST
 	docker build -H ${DOCKER_HOST} -t ${TEST_IMG}:${IMAGE_TAG} -f service-test-suite/Dockerfile service-test-suite
 else
-	docker build --t ${TEST_IMG}:${IMAGE_TAG} -f service-test-suite/Dockerfile service-test-suite
+	docker build -t ${TEST_IMG}:${IMAGE_TAG} -f service-test-suite/Dockerfile service-test-suite
 endif
 
 .PHONY: build-ec
