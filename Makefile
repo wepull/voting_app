@@ -3,7 +3,9 @@ BALLOT_IMG=ballot
 ECSVR_IMG=ecserver
 TEST_IMG=service-test-suite
 EC_IMG=election-commission
-IMAGE_TAG=latest
+ifndef IMAGE_TAG
+  IMAGE_TAG=latest
+endif
 
 # HOSTNAME := $(shell hostname)
 .PHONY: all
@@ -41,23 +43,43 @@ dockerise: build-voter build-ballot build-ecserver build-ec build-test
 
 .PHONY: build-ballot
 build-ballot:
+ifdef DOCKER_HOST
+	docker build -H ${DOCKER_HOST} -t ${BALLOT_IMG}:${IMAGE_TAG} -f ballot/Dockerfile ballot
+else
 	docker build -t ${BALLOT_IMG}:${IMAGE_TAG} -f ballot/Dockerfile ballot
+endif
 
 .PHONY: build-voter
 build-voter:
+ifdef DOCKER_HOST
+	docker build -H ${DOCKER_HOST} -t ${VOTER_IMG}:${IMAGE_TAG} -f voter/Dockerfile voter
+else
 	docker build -t ${VOTER_IMG}:${IMAGE_TAG} -f voter/Dockerfile voter	
+endif
 
 .PHONY: build-ecserver
 build-ecserver:
+ifdef DOCKER_HOST
+	docker build -H ${DOCKER_HOST} -t ${ECSVR_IMG}:${IMAGE_TAG} -f ecserver/Dockerfile ecserver
+else
 	docker build -t ${ECSVR_IMG}:${IMAGE_TAG} -f ecserver/Dockerfile ecserver
+endif
 
 .PHONY: build-test
 build-test:
-	docker build -t ${TEST_IMG}:${IMAGE_TAG} -f service-test-suite/Dockerfile service-test-suite
+ifdef DOCKER_HOST
+	docker build -H ${DOCKER_HOST} -t ${TEST_IMG}:${IMAGE_TAG} -f service-test-suite/Dockerfile service-test-suite
+else
+	docker build --t ${TEST_IMG}:${IMAGE_TAG} -f service-test-suite/Dockerfile service-test-suite
+endif
 
 .PHONY: build-ec
 build-ec:
+ifdef DOCKER_HOST
+	docker build -H ${DOCKER_HOST} -t ${EC_IMG}:${IMAGE_TAG} -f election-commission/Dockerfile election-commission
+else
 	docker build -t ${EC_IMG}:${IMAGE_TAG} -f election-commission/Dockerfile election-commission
+endif
 		
 .PHONY: push
 push:
