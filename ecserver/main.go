@@ -25,7 +25,7 @@ var (
 			ImageUrl: "https://miro.medium.com/max/400/0*KzqL3xqmXzV5PPjX.png",
 		},
 		{
-			Name:     "K3D",
+		 	Name:     "K3D",
 			ImageUrl: "https://www.suse.com/c/wp-content/uploads/2021/02/K3D-Blog-Graphic-20210209.png",
 		},
 	}
@@ -132,7 +132,7 @@ func deleteCandidate(w http.ResponseWriter, r *http.Request) {
 		writeBasicResponse(w, resp)
 		return
 	}
-	
+
 	writeAllCandidatesResponse(w)
 }
 
