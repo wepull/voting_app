@@ -6,10 +6,11 @@ EC_IMG=election-commission
 ifndef IMAGE_TAG
   IMAGE_TAG=latest
 endif
+CLUSTER_IP := $(shell ping -W2 -n -q -c1 current-cluster-roost.io  2> /dev/null | awk -F '[()]' '/PING/ { print $$2}')
 
 # HOSTNAME := $(shell hostname)
 .PHONY: all
-all: dockerise deploy
+all: dockerise helm-deploy
 
 .PHONY: test
 test: test-ballot test-voter test-ecserver
@@ -102,9 +103,21 @@ deploy:
 	kubectl apply -f service-test-suite/test-suite.yaml
 	kubectl apply -f election-commission/ec.yaml
 	kubectl apply -f ingress.yaml
+	
+.PHONY: helm-deploy
+helm-deploy: 
+ifeq ($(strip $(CLUSTER_IP)),)
+	@echo "UNKNOWN_CLUSTER_IP: failed to resolve current-cluster-roost.io to an valid IP"
+	@exit 1;
+endif
+		helm install vote helm-vote --set clusterIP=$(CLUSTER_IP)
+		
+.PHONY: helm-undeploy
+helm-undeploy:
+		-helm uninstall vote
 
 .PHONY: clean
-clean:
+clean: helm-undeploy
 	-kubectl delete -f service-test-suite/test-suite.yaml
 	-kubectl delete -f voter/voter.yaml
 	-kubectl delete -f ballot/ballot.yaml
