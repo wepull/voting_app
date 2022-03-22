@@ -1,16 +1,16 @@
 config:
-  target: "http://roost-controlplane:30081"
+  target: "http://default.ecserver.10.10.0.10.nip.io"
   http:
     # Responses have to be sent within 10 seconds, or an `ETIMEDOUT` error gets raised.
     timeout: 10
   environments:
     production:
-      target: "http://18.217.74.195:30081"
+      target: "http://default.ecserver.10.10.0.10.nip.io"
       phases:
         - duration: 15
           arrivalRate: 5
     unit:
-      target: "http://roost-controlplane:30081"
+      target: "http://default.ecserver.10.10.0.10.nip.io"
       phases:
         - duration: 5
           arrivalRate: 2

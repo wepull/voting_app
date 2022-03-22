@@ -1,36 +1,45 @@
-Build voter/Dockerfile
-Deploy voter/voter.yaml
+# Voting app
 
-And you can access roost-controlplane:30030 over a browser 
-* For single-node cluster, try roost-worker instead of roost-controlplane
-But this is just the UI
+## About project
 
+Voting application contains various frontend and backend microservices. These microservices are deployed and are available over ingress in Roost Cluster.
 
-Build ballot/Dockerfile
-Apply ballot/ballot.yaml to ZKE
+### Voter
 
-And you can access roost-controlplane:30080 (GET)
-* For single-node cluster, try roost-worker instead of roost-controlplane
-But this is just the Ballot API
+An frontend application written in node to allow participants to vote.
 
-POST request can also be accessed at the same end-point
+Depends on: ballot and ecserver services
 
-====
-Run both microservices and you have a full-fledged voting app
+### Ballot
 
+An backend app for voter written in Golang, to store the votes.
 
-## Service dependency test suite
+### Election Commission
+
+An frontend to manage the election candidates and uses ecserver as backend to store candidates lists.
+
+Depends on: ecserver
+
+### ECserver
+
+An backend app written in Golang for election-commission to store list of candidates.
+
+## How to deploy
+
+Right-click on [Makefile](./Makefile) and choose Run.
+
+## How to access application
+
+Pattern: http://$namespace.$serviceName.$clusterPublicIP.nip.io
+
+Voter: [default.voter.10.10.0.10.nip.io](http://default.voter.10.10.0.10.nip.io)
+
+ElectionCommission: [default.ec.10.10.0.10.nip.io](default.ec.10.10.0.10.nip.io)
+
+## How to test deployed app
 
 Build and deploy service-test-suite in roost cluster.
-Upload service-dependency.json from Observability -> Service Fitness in Roost Desktop
-On building ballot image from within Roost Desktop, service filness events can be seen from event viewer.
+Roost intelligently identifies service dependencies. So whenever dependent service is modified, specified test suite is triggered.
+In event of building ballot image or restart of the ballot app, service test suite would be triggered and fitness events can be seen from event viewer ( Observability -> Service Fitness -> Fitness Event).
 
-## Use helm to deploy voting app
-  
-  Right click on `helm-vote` and select `helm install` option to deploy 
-  
-## How to access voting app (if deployed with ingress)
-  
-  Open browser and access URL
-  1. Voting Portal : http://current-cluster.roost.io/voter
-  2. Election Commission portal: http://current-cluster.roost.io/ec
+
