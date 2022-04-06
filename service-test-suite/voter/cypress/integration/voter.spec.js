@@ -6,7 +6,7 @@
 // https://on.cypress.io/writing-first-test
 describe('My First Test', () => {
   it('Visits voter webpage', () => {
-    cy.visit('http://roost-controlplane:30030/voter')
+    cy.visit('http://vote-helm.voter.10.10.0.10.nip.io/')
 
   cy.intercept(
   {
@@ -22,12 +22,12 @@ cy.wait('@postresult',{ responseTimeout: 35000 }).then((interception) => {
   assert.isNotNull(interception.response.body, '{code: 201, message: "Vote saved sucessfully"}')
 })
 
-cy.reload()
-cy.contains("MiniKube").click()
+// cy.reload()
+// cy.contains("MiniKube").click()
 
-cy.wait('@postresult',{ responseTimeout: 35000 }).then((interception) => {
-  assert.isNotNull(interception.response.body, '{code: 201, message: "Vote saved sucessfully"}')
-})
+// cy.wait('@postresult',{ responseTimeout: 35000 }).then((interception) => {
+//   assert.isNotNull(interception.response.body, '{code: 201, message: "Vote saved sucessfully"}')
+// })
 cy.reload()
 cy.contains("Roost").click()
 
@@ -35,16 +35,16 @@ cy.wait('@postresult',{ responseTimeout: 35000 }).then((interception) => {
   assert.isNotNull(interception.response.body, '{code: 201, message: "Vote saved sucessfully"}')
 })
 cy.reload()
-cy.contains("K3D").click()
+cy.contains("Rancher").click()
 
 cy.wait('@postresult',{ responseTimeout: 35000 }).then((interception) => {
   assert.isNotNull(interception.response.body, '{code: 201, message: "Vote saved sucessfully"}')
 })
 
-cy.visit('http://roost-controlplane:30030/voter/result')
+cy.visit('http://vote-helm.voter.10.10.0.10.nip.io/voter/result')
 cy.contains('Roost')
 cy.contains('Docker')
-cy.contains('MiniKube')
-cy.contains('K3D')
+//cy.contains('MiniKube')
+cy.contains('Rancher')
   })
 })
