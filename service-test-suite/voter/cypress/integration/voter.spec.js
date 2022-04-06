@@ -25,9 +25,9 @@ cy.wait('@postresult',{ responseTimeout: 35000 }).then((interception) => {
 // cy.reload()
 // cy.contains("MiniKube").click()
 
-cy.wait('@postresult',{ responseTimeout: 35000 }).then((interception) => {
-  assert.isNotNull(interception.response.body, '{code: 201, message: "Vote saved sucessfully"}')
-})
+// cy.wait('@postresult',{ responseTimeout: 35000 }).then((interception) => {
+//   assert.isNotNull(interception.response.body, '{code: 201, message: "Vote saved sucessfully"}')
+// })
 cy.reload()
 cy.contains("Roost").click()
 
