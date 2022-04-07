@@ -6,7 +6,7 @@
 // https://on.cypress.io/writing-first-test
 describe('My First Test', () => {
   it('Visits voter webpage', () => {
-    cy.visit('http://vote-helm.voter.10.10.0.10.nip.io/')
+    cy.visit(Cypress.env('ROOST_SVC_URL'))
 
   cy.intercept(
   {
@@ -41,7 +41,7 @@ cy.wait('@postresult',{ responseTimeout: 35000 }).then((interception) => {
   assert.isNotNull(interception.response.body, '{code: 201, message: "Vote saved sucessfully"}')
 })
 
-cy.visit('http://vote-helm.voter.10.10.0.10.nip.io/voter/result')
+cy.visit(Cypress.env('ROOST_SVC_HOST')+'/voter/result')
 cy.contains('Roost')
 cy.contains('Docker')
 //cy.contains('MiniKube')
