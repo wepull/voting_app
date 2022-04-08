@@ -45,7 +45,7 @@ dockerise: build-voter build-ballot build-ecserver build-ec build-test
 .PHONY: build-ballot
 build-ballot:
 ifdef DOCKER_HOST
-	docker -H ${DOCKER_HOST} build-t ${BALLOT_IMG}:${IMAGE_TAG} -f ballot/Dockerfile ballot
+	docker -H ${DOCKER_HOST} build -t ${BALLOT_IMG}:${IMAGE_TAG} -f ballot/Dockerfile ballot
 else
 	docker build -t ${BALLOT_IMG}:${IMAGE_TAG} -f ballot/Dockerfile ballot
 endif
