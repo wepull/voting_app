@@ -1,50 +1,77 @@
-// sample_spec.js.js created with Cypress
-//
-// Start writing your Cypress tests below!
-// If you're unfamiliar with how Cypress works,
-// check out the link below and learn how to write your first test:
-// https://on.cypress.io/writing-first-test
-describe('My First Test', () => {
+const { expect, assert } = require("chai")
+const { it } = require("mocha")
+
+describe('Checking Voter Webpage ', () => {
+
   it('Visits voter webpage', () => {
-    cy.visit(Cypress.env('ROOST_SVC_URL'))
+    cy.visit('http://default.voter.10.10.0.10.nip.io/') // Ingress Endpoint
 
-  cy.intercept(
-  {
-    method: 'POST', // Route all POST requests
-    url: '*ballot*', // that have a URL that matches '/users/*'
-  }
-).as('postresult')
+    cy.intercept(
+      {
+        method: 'POST', 
+        url: '*ballot*', 
+      }
+    ).as('postresult')
+    
 
-cy.contains("Docker").click()
+    cy.contains('Docker')
+    .should('be.visible')
+    .click()
 
-cy.wait('@postresult',{ responseTimeout: 35000 }).then((interception) => {
+    cy.wait('@postresult',{ responseTimeout: 5000 }).then((interception) => {
+      assert.isNotNull(interception.response.body, '{code: 201, message: "Vote saved sucessfully"}')
+    })
 
-  assert.isNotNull(interception.response.body, '{code: 201, message: "Vote saved sucessfully"}')
-})
+    cy.reload()
 
-// cy.reload()
-// cy.contains("MiniKube").click()
+    cy.contains("Roost")
+    .should('be.visible')
+    .click()
 
-// cy.wait('@postresult',{ responseTimeout: 35000 }).then((interception) => {
-//   assert.isNotNull(interception.response.body, '{code: 201, message: "Vote saved sucessfully"}')
-// })
-cy.reload()
-cy.contains("Roost").click()
+    cy.wait('@postresult',{ responseTimeout: 5000 }).then((interception) => {
+      assert.isNotNull(interception.response.body, '{code: 201, message: "Vote saved sucessfully"}')
+    })
 
-cy.wait('@postresult',{ responseTimeout: 35000 }).then((interception) => {
-  assert.isNotNull(interception.response.body, '{code: 201, message: "Vote saved sucessfully"}')
-})
-cy.reload()
-cy.contains("Rancher").click()
+    cy.reload()
 
-cy.wait('@postresult',{ responseTimeout: 35000 }).then((interception) => {
-  assert.isNotNull(interception.response.body, '{code: 201, message: "Vote saved sucessfully"}')
-})
+    cy.contains("Rancher")
+    .should('be.visible')
+    .click()
 
-cy.visit(Cypress.env('ROOST_SVC_HOST')+'/voter/result')
-cy.contains('Roost')
-cy.contains('Docker')
-//cy.contains('MiniKube')
-cy.contains('Rancher')
+    cy.wait('@postresult',{ responseTimeout: 5000 }).then((interception) => {
+      assert.isNotNull(interception.response.body, '{code: 201, message: "Vote saved sucessfully"}')
+    })
+
+    cy.contains('Show Results')
+    .click()
+
+    cy.url()
+    .should('be.equal','http://default.voter.10.10.0.10.nip.io/voter/result')
+
+    cy.contains('Roost').should('be.visible')
+    cy.contains('Docker').should('be.visible')
+    cy.contains('Rancher').should('be.visible')
+  
   })
+
+  it('Check votes registered in backend ',() => {
+  
+    let voteCount 
+    cy.request('http://default.ballot.10.10.0.10.nip.io/').then((response)=> {
+      voteCount = response.body.total_votes 
+    })
+
+    cy.visit('http://default.voter.10.10.0.10.nip.io/') // Ingress Endpoint
+  
+    cy.contains("Roost")
+    .should('be.visible')
+    .click()
+
+
+    cy.request("http://default.ballot.10.10.0.10.nip.io/").then( (resp) => {
+      assert(expect(resp.body.total_votes).to.eq(voteCount+1))
+    })
+
+  })
+
 })
