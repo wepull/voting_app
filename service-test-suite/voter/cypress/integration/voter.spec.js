@@ -5,7 +5,7 @@ describe('Checking Voter Webpage ', () => {
 
   it('Visits voter webpage', () => {
 
-    cy.visit('http://default.voter.10.10.0.10.nip.io/')
+    cy.visit(Cypress.env('ROOST_SVC_URL')) //Env
 
     // Iterating over all the candidates and voting for them 
     cy.get('.cardContent').each((element,index,list)=>{
@@ -14,7 +14,7 @@ describe('Checking Voter Webpage ', () => {
 
       if(candidateName){
 
-        cy.visit('http://default.voter.10.10.0.10.nip.io/') // Ingress Endpoint
+        cy.visit(Cypress.env('ROOST_SVC_URL')) 
 
         cy.intercept(
         {
@@ -36,7 +36,7 @@ describe('Checking Voter Webpage ', () => {
         .click()
   
         cy.url()
-        .should('be.equal','http://default.voter.10.10.0.10.nip.io/voter/result')
+        .should('be.equal',Cypress.env('ROOST_SVC_URL')+'/voter/result')
 
         cy.contains(candidateName)
         cy.reload()
