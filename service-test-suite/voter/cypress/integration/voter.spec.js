@@ -1,50 +1,51 @@
-// sample_spec.js.js created with Cypress
-//
-// Start writing your Cypress tests below!
-// If you're unfamiliar with how Cypress works,
-// check out the link below and learn how to write your first test:
-// https://on.cypress.io/writing-first-test
-describe('My First Test', () => {
+const { expect, assert } = require("chai")
+const { it } = require("mocha")
+
+describe('Checking Voter Webpage ', () => {
+
   it('Visits voter webpage', () => {
-    cy.visit(Cypress.env('ROOST_SVC_URL'))
 
-  cy.intercept(
-  {
-    method: 'POST', // Route all POST requests
-    url: '*ballot*', // that have a URL that matches '/users/*'
-  }
-).as('postresult')
+    cy.visit(Cypress.env('ROOST_SVC_URL')) //Env
 
-cy.contains("Docker").click()
+    // Iterating over all the candidates and voting for them 
+    cy.get('.cardContent').each((element,index,list)=>{
 
-cy.wait('@postresult',{ responseTimeout: 35000 }).then((interception) => {
+      let candidateName = element.text()
 
-  assert.isNotNull(interception.response.body, '{code: 201, message: "Vote saved sucessfully"}')
-})
+      if(candidateName){
 
-// cy.reload()
-// cy.contains("MiniKube").click()
+        cy.visit(Cypress.env('ROOST_SVC_URL')) 
 
-// cy.wait('@postresult',{ responseTimeout: 35000 }).then((interception) => {
-//   assert.isNotNull(interception.response.body, '{code: 201, message: "Vote saved sucessfully"}')
-// })
-cy.reload()
-cy.contains("Roost").click()
+        cy.intercept(
+        {
+          method: 'POST', 
+          url: '*ballot*', 
+        }
+        ).as('postresult')
 
-cy.wait('@postresult',{ responseTimeout: 35000 }).then((interception) => {
-  assert.isNotNull(interception.response.body, '{code: 201, message: "Vote saved sucessfully"}')
-})
-cy.reload()
-cy.contains("Rancher").click()
+        cy.contains(candidateName).click()
+        
+        cy.get('.selectedCard')
+        .should('be.visible')
 
-cy.wait('@postresult',{ responseTimeout: 35000 }).then((interception) => {
-  assert.isNotNull(interception.response.body, '{code: 201, message: "Vote saved sucessfully"}')
-})
+        cy.wait('@postresult',{ responseTimeout: 5000 }).then((interception) => {
+          assert.isNotNull(interception.response.body, '{code: 201, message: "Vote saved sucessfully"}')
+        })
 
-cy.visit(Cypress.env('ROOST_SVC_HOST')+'/voter/result')
-cy.contains('Roost')
-cy.contains('Docker')
-//cy.contains('MiniKube')
-cy.contains('Rancher')
+        cy.contains('Show Results')
+        .click()
+  
+        cy.url()
+        .should('be.equal',Cypress.env('ROOST_SVC_HOST')+'/voter/result')
+
+        cy.contains(candidateName)
+        cy.reload()
+
+      }else {
+        cy.log("Add candidates first !")
+      }
+    })
+  
   })
+
 })
