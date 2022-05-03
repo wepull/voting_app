@@ -36,7 +36,7 @@ describe('Checking Voter Webpage ', () => {
         .click()
   
         cy.url()
-        .should('be.equal',Cypress.env('ROOST_SVC_URL')+'/voter/result')
+        .should('be.equal',Cypress.env('ROOST_SVC_HOST')+'/voter/result')
 
         cy.contains(candidateName)
         cy.reload()
