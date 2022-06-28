@@ -3,30 +3,30 @@ services:
   ballot:
     build: ballot
     ports:
-      - "8085:8080"
+      - "30040:8080"
   voter:
     build: voter
     tty: true
     stdin_open: true
     ports: 
-      - "8086:80"
+      - "30041:80"
     environment:
-      REACT_APP_BALLOT_ENDPOINT:  "localhost:8085"
-      REACT_APP_EC_SERVER_ENDPOINT: "localhost:8087"
+      REACT_APP_BALLOT_ENDPOINT:  "${HOSTIP}:30040"
+      REACT_APP_EC_SERVER_ENDPOINT: "${HOSTIP}:30042"
     links:
       - ballot
       - ecserver
   ecserver:
     build: ecserver
     ports: 
-      - "8087:8081"
+      - "30042:8081"
   election-commission:
     build: election-commission
     tty: true
     stdin_open: true
     ports: 
-      - "8088:80"
+      - "30043:80"
     environment:
-      REACT_APP_EC_SERVER_ENDPOINT: "localhost:8087"
+      REACT_APP_EC_SERVER_ENDPOINT: "${HOSTIP}:30042"
     links:
       - ecserver
