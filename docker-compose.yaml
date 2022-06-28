@@ -1,0 +1,32 @@
+version: "3.9"
+services:
+  ballot:
+    build: ballot
+    ports:
+      - "8085:8080"
+  voter:
+    build: voter
+    tty: true
+    stdin_open: true
+    ports: 
+      - "8086:80"
+    environment:
+      REACT_APP_BALLOT_ENDPOINT:  "localhost:8085"
+      REACT_APP_EC_SERVER_ENDPOINT: "localhost:8087"
+    links:
+      - ballot
+      - ecserver
+  ecserver:
+    build: ecserver
+    ports: 
+      - "8087:8081"
+  election-commission:
+    build: election-commission
+    tty: true
+    stdin_open: true
+    ports: 
+      - "8088:80"
+    environment:
+      REACT_APP_EC_SERVER_ENDPOINT: "localhost:8087"
+    links:
+      - ecserver
