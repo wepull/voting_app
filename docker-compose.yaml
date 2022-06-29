@@ -11,8 +11,8 @@ services:
     ports: 
       - "30041:80"
     environment:
-      REACT_APP_BALLOT_ENDPOINT:  "${HOSTIP}:30040"
-      REACT_APP_EC_SERVER_ENDPOINT: "${HOSTIP}:30042"
+      REACT_APP_BALLOT_ENDPOINT:  "${ROOST_CLUSTER_IP}:30040"
+      REACT_APP_EC_SERVER_ENDPOINT: "${ROOST_CLUSTER_IP}:30042"
     links:
       - ballot
       - ecserver
@@ -27,6 +27,6 @@ services:
     ports: 
       - "30043:80"
     environment:
-      REACT_APP_EC_SERVER_ENDPOINT: "${HOSTIP}:30042"
+      REACT_APP_EC_SERVER_ENDPOINT: "${ROOST_CLUSTER_IP}:30042"
     links:
       - ecserver
