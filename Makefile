@@ -7,6 +7,10 @@ ifndef IMAGE_TAG
   IMAGE_TAG=latest
 endif
 CLUSTER_IP := $(shell ping -W2 -n -q -c1 current-cluster-roost.io  2> /dev/null | awk -F '[()]' '/PING/ { print $$2}')
+DOCKER_HOST_ARG=""
+ifdef DOCKER_HOST
+        DOCKER_HOST_ARG="-H ${DOCKER_HOST}"
+endif
 
 # HOSTNAME := $(shell hostname)
 .PHONY: all
@@ -45,7 +49,7 @@ dockerise: build-voter build-ballot build-ecserver build-ec build-test
 .PHONY: build-ballot
 build-ballot:
 ifdef DOCKER_HOST
-	docker -H ${DOCKER_HOST} build -t ${BALLOT_IMG}:${IMAGE_TAG} -f ballot/Dockerfile ballot
+	docker ${DOCKER_HOST_ARG} build -t ${BALLOT_IMG}:${IMAGE_TAG} -f ballot/Dockerfile ballot
 else
 	docker build -t ${BALLOT_IMG}:${IMAGE_TAG} -f ballot/Dockerfile ballot
 endif
@@ -53,7 +57,7 @@ endif
 .PHONY: build-voter
 build-voter:
 ifdef DOCKER_HOST
-	docker -H ${DOCKER_HOST} build -t ${VOTER_IMG}:${IMAGE_TAG} -f voter/Dockerfile voter
+	docker ${DOCKER_HOST_ARG} build -t ${VOTER_IMG}:${IMAGE_TAG} -f voter/Dockerfile voter
 else
 	docker build -t ${VOTER_IMG}:${IMAGE_TAG} -f voter/Dockerfile voter	
 endif
@@ -61,7 +65,7 @@ endif
 .PHONY: build-ecserver
 build-ecserver:
 ifdef DOCKER_HOST
-	docker -H ${DOCKER_HOST} build -t ${ECSVR_IMG}:${IMAGE_TAG} -f ecserver/Dockerfile ecserver
+	docker ${DOCKER_HOST_ARG} build -t ${ECSVR_IMG}:${IMAGE_TAG} -f ecserver/Dockerfile ecserver
 else
 	docker build -t ${ECSVR_IMG}:${IMAGE_TAG} -f ecserver/Dockerfile ecserver
 endif
@@ -69,7 +73,7 @@ endif
 .PHONY: build-test
 build-test:
 ifdef DOCKER_HOST
-	docker -H ${DOCKER_HOST} build -t ${TEST_IMG}:${IMAGE_TAG} -f service-test-suite/Dockerfile service-test-suite
+	docker ${DOCKER_HOST_ARG} build -t ${TEST_IMG}:${IMAGE_TAG} -f service-test-suite/Dockerfile service-test-suite
 else
 	docker build -t ${TEST_IMG}:${IMAGE_TAG} -f service-test-suite/Dockerfile service-test-suite
 endif
@@ -77,7 +81,7 @@ endif
 .PHONY: build-ec
 build-ec:
 ifdef DOCKER_HOST
-	docker -H ${DOCKER_HOST} build -t ${EC_IMG}:${IMAGE_TAG} -f election-commission/Dockerfile election-commission
+	docker ${DOCKER_HOST_ARG} build -t ${EC_IMG}:${IMAGE_TAG} -f election-commission/Dockerfile election-commission
 else
 	docker build -t ${EC_IMG}:${IMAGE_TAG} -f election-commission/Dockerfile election-commission
 endif
@@ -112,6 +116,10 @@ ifeq ($(strip $(CLUSTER_IP)),)
 endif
 		helm install vote helm-vote --set clusterIP=$(CLUSTER_IP)
 		
+.PHONY: generate
+generate:
+	helm template helm-vote --output-dir generated-files
+
 .PHONY: helm-undeploy
 helm-undeploy:
 		-helm uninstall vote
@@ -123,3 +131,5 @@ clean: helm-undeploy
 	-kubectl delete -f ballot/ballot.yaml
 	-kubectl delete -f ecserver/ecserver.yaml
 	-kubectl delete -f election-commission/ec.yaml
+	-kubectl delete -f generated-files
+	-rm -rf generated-files  
