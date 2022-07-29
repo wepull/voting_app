@@ -1,16 +1,16 @@
 config:
-  target: "{{.Values.ballot_ip}}"
+  target: "http://{{.Values.namespace}}.{{.Values.services.ballot.imageName}}.{{.Values.clusterIP}}.{{.Values.clusterDomain}}"
   http:
     # Responses have to be sent within 10 seconds, or an `ETIMEDOUT` error gets raised.
     timeout: 10
   environments:
     production:
-      target: "{{.Values.ballot_ip}}"
+      target: "http://{{.Values.namespace}}.{{.Values.services.ballot.imageName}}.{{.Values.clusterIP}}.{{.Values.clusterDomain}}"
       phases:
         - duration: 15
           arrivalRate: 5
     unit:
-      target: "{{.Values.ballot_ip}}"
+      target: "http://{{.Values.namespace}}.{{.Values.services.ballot.imageName}}.{{.Values.clusterIP}}.{{.Values.clusterDomain}}"
       phases:
         - duration: 5
           arrivalRate: 2
