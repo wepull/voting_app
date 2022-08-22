@@ -1,0 +1,56 @@
+steps:
+- name: 'gcr.io/cloud-builders/docker'
+  id: 'ballot'
+  args: ['build', '-t', 'asia-south1-docker.pkg.dev/${PROJECT_ID}/voting-app/ballot-test', './ballot']
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'asia-south1-docker.pkg.dev/${PROJECT_ID}/voting-app/ballot-test']
+- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  entrypoint: 'gcloud'
+  args: ['compute', 'instances', 'create-with-container', 'ballot', '--container-image', 'asia-south1-docker.pkg.dev/${PROJECT_ID}/voting-app/ballot-test']
+  substitution: PROJECT_ID=${PROJECT_ID}
+  env:
+   - 'CLOUDSDK_COMPUTE_REGION=asia-south1'
+   - 'CLOUDSDK_COMPUTE_ZONE=asia-south1-a'
+
+- name: 'gcr.io/cloud-builders/docker'
+  id: 'ecserver'
+  args: ['build', '-t', 'asia-south1-docker.pkg.dev/${PROJECT_ID}/voting-app/ec-server-test', './ecserver']
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'asia-south1-docker.pkg.dev/${PROJECT_ID}/voting-app/ec-server-test']
+- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  entrypoint: 'gcloud'
+  args: ['compute', 'instances', 'create-with-container', 'ecserver', '--container-image', 'asia-south1-docker.pkg.dev/${PROJECT_ID}/voting-app/ec-server-test']
+  substitution: PROJECT_ID=${PROJECT_ID}
+  env:
+   - 'CLOUDSDK_COMPUTE_REGION=asia-south1'
+   - 'CLOUDSDK_COMPUTE_ZONE=asia-south1-a'
+
+- name: 'gcr.io/cloud-builders/docker'
+  id: 'election-commision'
+  args: ['build', '-t', 'asia-south1-docker.pkg.dev/${PROJECT_ID}/voting-app/election-commission-test', './election-commission/public']
+  env: 
+   - EC_SERVER_ENDPOINT='ecserver'
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'asia-south1-docker.pkg.dev/${PROJECT_ID}/voting-app/election-commission-test']
+- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  entrypoint: 'gcloud'
+  args: ['compute', 'instances', 'create-with-container', 'election-commission', '--container-image', 'asia-south1-docker.pkg.dev/${PROJECT_ID}/voting-app/election-commission-test']
+  substitution: PROJECT_ID=${PROJECT_ID}
+  env:
+   - 'CLOUDSDK_COMPUTE_REGION=asia-south1'
+   - 'CLOUDSDK_COMPUTE_ZONE=asia-south1-a'
+- name: 'gcr.io/cloud-builders/docker'
+  id: 'voter'
+  args: ['build', '-t', 'asia-south1-docker.pkg.dev/${PROJECT_ID}/voting-app/voter-test', './voter/src']
+  env: 
+   - REACT_APP_EC_SERVER_ENDPOINT='ecserver'
+   - REACT_APP_BALLOT_ENDPOINT='ballot'
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'asia-south1-docker.pkg.dev/${PROJECT_ID}/voting-app/voter-test']
+- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  entrypoint: 'gcloud'
+  args: ['compute', 'instances', 'create-with-container', 'voter', '--container-image', 'asia-south1-docker.pkg.dev/${PROJECT_ID}/voting-app/voter-test']
+  substitution: PROJECT_ID=${PROJECT_ID}
+  env:
+   - 'CLOUDSDK_COMPUTE_REGION=asia-south1'
+   - 'CLOUDSDK_COMPUTE_ZONE=asia-south1-a'
