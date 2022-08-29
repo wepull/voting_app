@@ -42,4 +42,13 @@ Build and deploy service-test-suite in roost cluster.
 Roost intelligently identifies service dependencies. So whenever dependent service is modified, specified test suite is triggered.
 In event of building ballot image or restart of the ballot app, service test suite would be triggered and fitness events can be seen from event viewer ( Observability -> Service Fitness -> Fitness Event).
 
+## How to deploy using cloudbuild.yaml
+
+Deploy the services manually and get the endpoints of the services(service url).  
+
+In the terminal run the command:
+
+```bash
+gcloud builds submit . --config=<path/to/cloudbuild.yaml> \ --substitution=_TAG=<provide the tag name>, _BALLOT_ENDPOINT=<ballot service url>, _ECSERVER_ENDPOINT=<ecserver service endpoint>
+```
 
