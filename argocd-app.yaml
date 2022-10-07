@@ -6,7 +6,7 @@ metadata:
 spec:
     project: default
     source:
-        repoURL: https://github.com/Divyeshzb/newVotingApp
+        repoURL: https://github.com/roost-io/voting_app
         targetRevision: HEAD
         path: helm-vote
         helm:
