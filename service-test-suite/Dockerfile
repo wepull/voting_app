@@ -1,4 +1,4 @@
-FROM golang:alpine as builder
+FROM golang:1.19.3-alpine as builder
 LABEL maintainer="mgdevstack" \
     vendor="Zettabytes" \
     owner="zbio"
