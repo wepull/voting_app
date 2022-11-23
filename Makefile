@@ -44,6 +44,16 @@ test-ecserver:
    run -e unit /scripts/test.yaml
 
 .PHONY: dockerise
+dockerise: pre-dockerise build-voter 
+
+.PHONY: pre-dockerise
+pre-dockerise:
+	docker pull golang:1.19.3-alpine3.16
+	docker pull alpine:3.16
+	docker pull node:14.21.1-alpine3.16
+	docker pull nginx:stable-alpine
+
+.PHONY: dockerise
 dockerise: build-voter build-ballot build-ecserver build-ec build-test
 
 .PHONY: build-ballot
