@@ -41,7 +41,7 @@ func TestVoteCount(t *testing.T) {
 		handler.ServeHTTP(rec, req)
 
 		if status := rec.Code; status != http.StatusOK {
-			t.Errorf("expected sucessful response status. got %v", status)
+			t.Errorf("expected successful response status. got %v", status)
 		}
 	}
 
