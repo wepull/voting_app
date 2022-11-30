@@ -15,7 +15,7 @@ LABEL maintainer="mgdevstack" \
     owner="zbio"
 COPY --from=builder /go/ballot.test /ballot.test
 USER nobody
-ENTRYPOINT ["/ballot.test"]
+CMD ["/ballot.test", "-test.v"]
 
 ## Main ballot application container
 FROM alpine
