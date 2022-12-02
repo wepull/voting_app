@@ -7,9 +7,9 @@ ifndef IMAGE_TAG
   IMAGE_TAG=latest
 endif
 CLUSTER_IP := $(shell ping -W2 -n -q -c1 current-cluster-roost.io  2> /dev/null | awk -F '[()]' '/PING/ { print $$2}')
-DOCKER_HOST_ARG=""
+DOCKER_HOST_ARG=
 ifdef DOCKER_HOST
-        DOCKER_HOST_ARG="-H ${DOCKER_HOST}"
+	DOCKER_HOST_ARG= -H ${DOCKER_HOST}
 endif
 
 # HOSTNAME := $(shell hostname)
@@ -43,9 +43,6 @@ test-ecserver:
    zbio/artillery-custom \
    run -e unit /scripts/test.yaml
 
-.PHONY: dockerise
-dockerise: pre-dockerise build-voter 
-
 .PHONY: pre-dockerise
 pre-dockerise:
 	docker pull golang:1.19.3-alpine3.16
@@ -54,7 +51,7 @@ pre-dockerise:
 	docker pull nginx:stable-alpine
 
 .PHONY: dockerise
-dockerise: build-voter build-ballot build-ecserver build-ec build-test
+dockerise: pre-dockerise build-voter build-ballot build-ecserver build-ec build-test
 
 .PHONY: build-ballot
 build-ballot:
